@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MitchWatch — Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --ink: #0f0e0d; --paper: #f5f0e8; --accent: #d94f2b;
+    --yes: #2a7d4f; --no: #c0392b; --muted: #7a7268;
+    --border: #d4cfc4; --card: #faf7f2;
+  }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--paper); color: var(--ink);
+    min-height: 100vh; display: flex;
+    align-items: flex-start; justify-content: center;
+    padding: 3rem 1.5rem 4rem;
+  }
+  .wrap { width: 100%; max-width: 480px; }
+  .wordmark {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 36px; letter-spacing: 0.06em;
+    margin-bottom: 2px;
+  }
+  .wordmark span { color: var(--accent); }
+  .eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px; letter-spacing: 0.16em;
+    text-transform: uppercase; color: var(--muted);
+    margin-bottom: 2rem;
+  }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 6px; padding: 26px;
+    margin-bottom: 16px;
+  }
+  .card-heading {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px; letter-spacing: 0.06em;
+    margin-bottom: 14px;
+  }
+  label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--muted);
+    display: block; margin-bottom: 5px; margin-top: 12px;
+  }
+  label:first-of-type { margin-top: 0; }
+  input[type="password"] {
+    width: 100%; padding: 10px 14px;
+    font-size: 14px; font-family: 'DM Sans', sans-serif;
+    background: var(--paper); border: 1px solid var(--border);
+    border-radius: 4px; color: var(--ink); outline: none;
+    transition: border-color 0.15s;
+  }
+  input:focus { border-color: var(--ink); }
+  .btn {
+    width: 100%; padding: 11px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px; letter-spacing: 0.14em;
+    text-transform: uppercase;
+    background: var(--ink); color: var(--paper);
+    border: none; border-radius: 4px;
+    cursor: pointer; transition: opacity 0.15s;
+    margin-top: 12px;
+  }
+  .btn:hover { opacity: 0.82; }
+  .btn.outline {
+    background: none; color: var(--ink);
+    border: 1px solid var(--border);
+  }
+  .btn.outline:hover { border-color: var(--ink); }
+  .btn.danger {
+    background: none; color: var(--no);
+    border: 1px solid var(--no);
+  }
+  .outcome-pair { display: flex; gap: 10px; margin-top: 10px; }
+  .outcome-opt {
+    flex: 1; padding: 14px 10px;
+    background: var(--paper); border: 1.5px solid var(--border);
+    border-radius: 4px; cursor: pointer;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 26px; letter-spacing: 0.06em;
+    text-align: center; color: var(--muted);
+    transition: border-color 0.15s, color 0.15s, background 0.15s;
+  }
+  .outcome-opt small {
+    display: block; font-family: 'DM Mono', monospace;
+    font-size: 10px; letter-spacing: 0.1em;
+    text-transform: uppercase; margin-top: 2px;
+  }
+  .outcome-opt:hover { border-color: var(--ink); color: var(--ink); }
+  .outcome-opt.sel-yes { border-color: var(--yes); color: var(--yes); background: #e6f4ed; }
+  .outcome-opt.sel-no { border-color: var(--no); color: var(--no); background: #faeaea; }
+  .divider { border: none; border-top: 1px solid var(--border); margin: 18px 0; }
+  .msg {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px; padding: 8px 12px;
+    border-radius: 4px; margin-top: 10px;
+    letter-spacing: 0.04em;
+  }
+  .msg.ok { background: #e6f4ed; color: var(--yes); }
+  .msg.err { background: #faeaea; color: var(--no); }
+  .stat-row {
+    display: flex; justify-content: space-between;
+    font-family: 'DM Mono', monospace;
+    font-size: 12px; color: var(--muted);
+    padding: 6px 0; border-bottom: 1px solid var(--border);
+  }
+  .stat-row:last-child { border-bottom: none; }
+  .stat-val { color: var(--ink); font-weight: 500; }
+  .hist-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 7px 0; border-bottom: 1px solid var(--border);
+    font-family: 'DM Mono', monospace; font-size: 11px; color: var(--muted);
+  }
+  .hist-row:last-child { border-bottom: none; }
+  .pill {
+    padding: 2px 9px; border-radius: 999px; font-size: 10px;
+    letter-spacing: 0.08em; text-transform: uppercase;
+  }
+  .pill.yes { background: #e6f4ed; color: var(--yes); }
+  .pill.no { background: #faeaea; color: var(--no); }
+  .pill.tbd { background: var(--border); color: var(--muted); }
+  #panel { display: none; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <p class="wordmark">Mitch<span>Watch</span></p>
+  <p class="eyebrow">Admin Panel</p>
+
+  <!-- LOGIN -->
+  <div id="login-section" class="card">
+    <p class="card-heading">Authenticate</p>
+    <label>Password</label>
+    <input type="password" id="pw-input" placeholder="Enter password" onkeydown="if(event.key==='Enter')login()">
+    <button class="btn" onclick="login()">Unlock</button>
+    <div id="login-msg"></div>
+  </div>
+
+  <!-- PANEL -->
+  <div id="panel">
+    <!-- TODAY'S STATS -->
+    <div class="card">
+      <p class="card-heading">Today's poll</p>
+      <div id="today-stats"></div>
+
+      <div class="divider"></div>
+
+      <p style="font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.14em; text-transform:uppercase; color:var(--muted); margin-bottom:2px;">Record outcome — did Mitch come in?</p>
+      <div class="outcome-pair">
+        <button class="outcome-opt" id="ob-yes" onclick="selectOutcome('yes')">
+          Yes<small>came in</small>
+        </button>
+        <button class="outcome-opt" id="ob-no" onclick="selectOutcome('no')">
+          No<small>no-show</small>
+        </button>
+      </div>
+      <button class="btn" onclick="archiveDay()">Save & Archive Day</button>
+      <div id="archive-msg"></div>
+    </div>
+
+    <!-- DANGER ZONE -->
+    <div class="card">
+      <p class="card-heading">Reset</p>
+      <p style="font-size:13px; color:var(--muted); margin-bottom:12px; font-weight:300;">Wipe today's votes and start fresh. Cannot be undone.</p>
+      <button class="btn danger" onclick="resetVotes()">Reset Today's Votes</button>
+      <div id="reset-msg"></div>
+    </div>
+
+    <!-- HISTORY -->
+    <div class="card">
+      <p class="card-heading">History</p>
+      <div id="history-list"><p style="font-size:13px;color:var(--muted);">Loading…</p></div>
+    </div>
+  </div>
+</div>
+
+<script>
+let adminPw = '';
+let selectedOutcome = null;
+
+function API(path) { return path; }
+
+async function login() {
+  const pw = document.getElementById('pw-input').value;
+  try {
+    const r = await fetch('/api/admin/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password: pw })
+    });
+    const d = await r.json();
+    if (d.success) {
+      adminPw = pw;
+      document.getElementById('login-section').style.display = 'none';
+      document.getElementById('panel').style.display = 'block';
+      loadAdminData();
+    } else {
+      showMsg('login-msg', 'Wrong password.', 'err');
+    }
+  } catch(e) { showMsg('login-msg', 'Server error.', 'err'); }
+}
+
+async function loadAdminData() {
+  try {
+    const r = await fetch('/api/admin/data', { headers: { 'x-admin-password': adminPw } });
+    const d = await r.json();
+    renderTodayStats(d.today);
+    renderHistory(d.history);
+  } catch(e) {}
+}
+
+function renderTodayStats(t) {
+  const yes = t ? Number(t.yes_votes) : 0;
+  const no = t ? Number(t.no_votes) : 0;
+  const total = yes + no;
+  const yp = total === 0 ? 0 : Math.round(yes / total * 100);
+  document.getElementById('today-stats').innerHTML = `
+    <div class="stat-row"><span>Yes votes</span><span class="stat-val">${yes} (${yp}%)</span></div>
+    <div class="stat-row"><span>No votes</span><span class="stat-val">${no} (${100 - yp}%)</span></div>
+    <div class="stat-row"><span>Total votes</span><span class="stat-val">${total}</span></div>
+  `;
+}
+
+function renderHistory(rows) {
+  if (!rows || rows.length === 0) {
+    document.getElementById('history-list').innerHTML = '<p style="font-size:13px;color:var(--muted);">No archived days yet.</p>';
+    return;
+  }
+  document.getElementById('history-list').innerHTML = rows.map(h => {
+    const yes = Number(h.yes_votes), no = Number(h.no_votes), total = yes + no;
+    const yp = total === 0 ? 0 : Math.round(yes / total * 100);
+    const oc = h.outcome || 'tbd';
+    const olabel = h.outcome === 'yes' ? 'Came in' : h.outcome === 'no' ? 'No-show' : 'TBD';
+    return `<div class="hist-row">
+      <span>${h.date}</span>
+      <span>${yp}% yes · ${total} votes</span>
+      <span class="pill ${oc}">${olabel}</span>
+    </div>`;
+  }).join('');
+}
+
+function selectOutcome(v) {
+  selectedOutcome = v;
+  document.getElementById('ob-yes').className = 'outcome-opt' + (v === 'yes' ? ' sel-yes' : '');
+  document.getElementById('ob-no').className = 'outcome-opt' + (v === 'no' ? ' sel-no' : '');
+}
+
+async function archiveDay() {
+  if (!selectedOutcome) { showMsg('archive-msg', 'Select an outcome first.', 'err'); return; }
+  try {
+    const r = await fetch('/api/admin/archive', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-admin-password': adminPw },
+      body: JSON.stringify({ outcome: selectedOutcome })
+    });
+    const d = await r.json();
+    if (d.success) {
+      showMsg('archive-msg', 'Archived! Poll reset for tomorrow.', 'ok');
+      selectedOutcome = null;
+      document.getElementById('ob-yes').className = 'outcome-opt';
+      document.getElementById('ob-no').className = 'outcome-opt';
+      loadAdminData();
+    }
+  } catch(e) { showMsg('archive-msg', 'Error.', 'err'); }
+}
+
+async function resetVotes() {
+  if (!confirm('Wipe all votes for today?')) return;
+  try {
+    const r = await fetch('/api/admin/reset', {
+      method: 'POST', headers: { 'x-admin-password': adminPw }
+    });
+    const d = await r.json();
+    if (d.success) { showMsg('reset-msg', 'Votes cleared.', 'ok'); loadAdminData(); }
+  } catch(e) { showMsg('reset-msg', 'Error.', 'err'); }
+}
+
+function showMsg(id, text, type) {
+  const el = document.getElementById(id);
+  el.innerHTML = `<div class="msg ${type}">${text}</div>`;
+  setTimeout(() => { el.innerHTML = ''; }, 4000);
+}
+</script>
+</body>
+</html>
