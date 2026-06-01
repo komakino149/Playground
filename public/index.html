@@ -1,19 +1,377 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <meta http-equiv="Content-Style-Type" content="text/css">
-  <title></title>
-  <meta name="Generator" content="Cocoa HTML Writer">
-  <meta name="CocoaVersion" content="2575.7">
-  <style type="text/css">
-    body {background-color: #f2ece2}
-    p.p1 {margin: 0.0px 0.0px 8.0px 0.0px; text-align: center; font: 11.0px 'Helvetica Neue'; color: #675f55; -webkit-text-stroke: #675f55; min-height: 13.0px}
-    span.s1 {font-kerning: none}
-    span.Apple-tab-span {white-space:pre}
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MitchWatch</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink: #0f0e0d;
+    --paper: #f5f0e8;
+    --accent: #d94f2b;
+    --yes: #2a7d4f;
+    --no: #c0392b;
+    --muted: #7a7268;
+    --border: #d4cfc4;
+    --card: #faf7f2;
+  }
+
+  html, body { height: 100%; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    overflow: hidden;
+  }
+
+  .screen {
+    position: fixed; inset: 0;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: 2rem;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    transform: translateY(24px);
+  }
+  .screen.active {
+    opacity: 1; pointer-events: all; transform: translateY(0);
+  }
+  .screen.exit {
+    opacity: 0; transform: translateY(-24px);
+  }
+
+  .masthead { text-align: center; margin-bottom: 2.5rem; }
+  .masthead-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--muted); margin-bottom: 8px;
+  }
+  .masthead h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(52px, 12vw, 96px);
+    letter-spacing: 0.04em; line-height: 0.9; color: var(--ink);
+  }
+  .masthead h1 span { color: var(--accent); }
+  .masthead-sub { font-size: 15px; color: var(--muted); margin-top: 10px; font-weight: 300; }
+
+  .vote-pair { display: flex; gap: 14px; width: 100%; max-width: 440px; }
+  .vote-btn {
+    flex: 1; padding: 0; background: none; cursor: pointer;
+    border: 1.5px solid var(--border); border-radius: 4px;
+    overflow: hidden; transition: border-color 0.2s, transform 0.15s;
+  }
+  .vote-btn:hover { transform: translateY(-2px); }
+  .vote-btn:active { transform: translateY(0) scale(0.98); }
+  .vote-btn-inner { padding: 28px 20px 24px; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+  .vote-btn .label {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 42px; letter-spacing: 0.06em; line-height: 1; transition: color 0.2s;
+  }
+  .vote-btn .sublabel {
+    font-size: 11px; font-family: 'DM Mono', monospace;
+    letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted);
+  }
+  .vote-btn.yes:hover { border-color: var(--yes); }
+  .vote-btn.yes:hover .label { color: var(--yes); }
+  .vote-btn.no:hover { border-color: var(--no); }
+  .vote-btn.no:hover .label { color: var(--no); }
+  .vote-note { margin-top: 1.25rem; font-size: 12px; font-family: 'DM Mono', monospace; color: var(--muted); letter-spacing: 0.06em; }
+
+  .voted-badge {
+    display: inline-block; padding: 6px 16px; border-radius: 999px;
+    font-size: 12px; font-family: 'DM Mono', monospace;
+    letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 2rem;
+  }
+  .voted-badge.yes { background: #e6f4ed; color: var(--yes); }
+  .voted-badge.no { background: #faeaea; color: var(--no); }
+
+  .results-wrap { width: 100%; max-width: 500px; }
+  .yesterday-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 6px; padding: 18px 22px; margin-bottom: 22px;
+    display: flex; align-items: center; gap: 16px;
+  }
+  .yesterday-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  .yesterday-dot.yes { background: var(--yes); }
+  .yesterday-dot.no { background: var(--no); }
+  .yesterday-dot.tbd { background: var(--muted); }
+  .yesterday-text { font-size: 13px; color: var(--muted); line-height: 1.5; }
+  .yesterday-text strong { color: var(--ink); font-weight: 500; }
+
+  .results-heading { font-family: 'Bebas Neue', sans-serif; font-size: 28px; letter-spacing: 0.06em; margin-bottom: 16px; }
+  .bar-block { margin-bottom: 18px; }
+  .bar-row { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px; }
+  .bar-label { font-size: 13px; font-weight: 500; letter-spacing: 0.04em; }
+  .bar-label.yes { color: var(--yes); }
+  .bar-label.no { color: var(--no); }
+  .bar-stat { font-family: 'DM Mono', monospace; font-size: 12px; color: var(--muted); }
+  .bar-track { height: 8px; background: var(--border); border-radius: 999px; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 999px; transition: width 0.8s cubic-bezier(0.25, 1, 0.5, 1); width: 0%; }
+  .bar-fill.yes { background: var(--yes); }
+  .bar-fill.no { background: var(--no); }
+
+  .verdict {
+    margin-top: 20px; padding: 14px 20px; border-radius: 4px;
+    display: flex; align-items: center; gap: 12px; border: 1px solid var(--border);
+  }
+  .verdict-label { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 2px; }
+  .verdict-value { font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 0.06em; }
+  .verdict-value.yes { color: var(--yes); }
+  .verdict-value.no { color: var(--no); }
+  .verdict-value.tie { color: var(--muted); }
+  .total-note { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--muted); margin-top: 14px; text-align: right; letter-spacing: 0.06em; }
+
+  .back-btn {
+    margin-top: 2rem; background: none; border: none;
+    font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--muted); cursor: pointer;
+    text-decoration: underline; text-underline-offset: 3px;
+  }
+  .back-btn:hover { color: var(--ink); }
+
+  .ticker {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    height: 32px; overflow: hidden; border-top: 1px solid var(--border);
+    background: var(--paper); display: flex; align-items: center;
+  }
+  .ticker-inner {
+    display: flex; white-space: nowrap;
+    animation: tick 20s linear infinite;
+    font-family: 'DM Mono', monospace; font-size: 10px;
+    letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted);
+  }
+  .ticker-inner span { padding: 0 24px; }
+  @keyframes tick { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+  .dot-sep { color: var(--border); }
+</style>
 </head>
 <body>
-<p class="p1"><span class="s1"><span class="Apple-tab-span">	</span></span></p>
+
+<div class="screen active" id="screen-vote">
+  <div class="masthead">
+    <p class="masthead-eyebrow">Daily office forecast</p>
+    <h1>Mitch<span>Watch</span></h1>
+    <p class="masthead-sub" id="vote-date-label"></p>
+  </div>
+
+  <div id="pre-vote">
+    <p style="text-align:center; font-size:15px; color:var(--muted); margin-bottom:1.5rem; font-weight:300;">Will Mitch be in tomorrow?</p>
+    <div class="vote-pair">
+      <button class="vote-btn yes" onclick="castVote('yes')">
+        <div class="vote-btn-inner">
+          <span class="label">Yes</span>
+          <span class="sublabel">He'll be here</span>
+        </div>
+      </button>
+      <button class="vote-btn no" onclick="castVote('no')">
+        <div class="vote-btn-inner">
+          <span class="label">No</span>
+          <span class="sublabel">Ghost mode</span>
+        </div>
+      </button>
+    </div>
+    <p class="vote-note">one vote per browser · results after voting</p>
+  </div>
+
+  <div id="already-voted" style="display:none; text-align:center;">
+    <span class="voted-badge" id="voted-badge-label"></span>
+    <p style="font-size:15px; color:var(--muted); font-weight:300; margin-bottom:1.5rem;">You already voted today.</p>
+    <button class="back-btn" onclick="showResults()">→ see current odds</button>
+  </div>
+</div>
+
+<div class="screen" id="screen-results">
+  <div class="results-wrap">
+    <div class="yesterday-card" id="yesterday-card" style="display:none;">
+      <div class="yesterday-dot" id="yesterday-dot"></div>
+      <p class="yesterday-text" id="yesterday-text"></p>
+    </div>
+
+    <p class="results-heading">Today's odds</p>
+
+    <div class="bar-block">
+      <div class="bar-row">
+        <span class="bar-label yes">Yes — he'll show</span>
+        <span class="bar-stat" id="yes-stat">0 votes</span>
+      </div>
+      <div class="bar-track"><div class="bar-fill yes" id="bar-yes"></div></div>
+    </div>
+
+    <div class="bar-block">
+      <div class="bar-row">
+        <span class="bar-label no">No — ghost mode</span>
+        <span class="bar-stat" id="no-stat">0 votes</span>
+      </div>
+      <div class="bar-track"><div class="bar-fill no" id="bar-no"></div></div>
+    </div>
+
+    <div class="verdict">
+      <div>
+        <p class="verdict-label">Crowd verdict</p>
+        <p class="verdict-value" id="verdict-value">—</p>
+      </div>
+    </div>
+
+    <p class="total-note" id="total-note">0 votes cast today</p>
+    <button class="back-btn" onclick="goBack()">← vote again tomorrow</button>
+  </div>
+</div>
+
+<div class="ticker">
+  <div class="ticker-inner" id="ticker-inner"></div>
+</div>
+
+<script>
+let pollData = null;
+let hasVotedToday = false;
+let myVote = null;
+
+function todayKey() {
+  return 'mitchvote_' + new Date().toISOString().slice(0, 10);
+}
+
+function checkLocalVote() {
+  const v = localStorage.getItem(todayKey());
+  if (v) { hasVotedToday = true; myVote = v; }
+}
+
+async function loadPoll() {
+  try {
+    const r = await fetch('/api/poll');
+    pollData = await r.json();
+  } catch(e) { console.error(e); }
+}
+
+function pct(a, b) {
+  const t = a + b; return t === 0 ? 0 : Math.round(a / t * 100);
+}
+
+function fmtDate(str) {
+  if (!str) return '';
+  const d = new Date(str + 'T12:00:00');
+  return d.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+}
+
+function renderResults() {
+  if (!pollData) return;
+  const t = pollData.today;
+  const y = pollData.yesterday;
+  const yes = t ? Number(t.yes_votes) : 0;
+  const no = t ? Number(t.no_votes) : 0;
+  const total = yes + no;
+  const yp = pct(yes, no);
+  const np = pct(no, yes);
+
+  document.getElementById('yes-stat').textContent = yes + ' vote' + (yes !== 1 ? 's' : '') + ' · ' + yp + '%';
+  document.getElementById('no-stat').textContent = no + ' vote' + (no !== 1 ? 's' : '') + ' · ' + np + '%';
+  document.getElementById('total-note').textContent = total + ' vote' + (total !== 1 ? 's' : '') + ' cast today';
+
+  setTimeout(() => {
+    document.getElementById('bar-yes').style.width = yp + '%';
+    document.getElementById('bar-no').style.width = np + '%';
+  }, 80);
+
+  const vv = document.getElementById('verdict-value');
+  if (total === 0) { vv.textContent = '—'; vv.className = 'verdict-value tie'; }
+  else if (yes > no) { vv.textContent = 'Probably yes'; vv.className = 'verdict-value yes'; }
+  else if (no > yes) { vv.textContent = 'Probably not'; vv.className = 'verdict-value no'; }
+  else { vv.textContent = 'Dead tie'; vv.className = 'verdict-value tie'; }
+
+  const ycard = document.getElementById('yesterday-card');
+  if (y) {
+    ycard.style.display = 'flex';
+    const dot = document.getElementById('yesterday-dot');
+    const txt = document.getElementById('yesterday-text');
+    const yyes = Number(y.yes_votes), yno = Number(y.no_votes);
+    const yyp = pct(yyes, yno);
+    const dateStr = fmtDate(y.date);
+    if (y.outcome === 'yes') {
+      dot.className = 'yesterday-dot yes';
+      txt.innerHTML = '<strong>' + dateStr + '</strong> — Mitch came in. The crowd said ' + yyp + '% yes.';
+    } else if (y.outcome === 'no') {
+      dot.className = 'yesterday-dot no';
+      txt.innerHTML = '<strong>' + dateStr + '</strong> — Mitch was a no-show. The crowd said ' + yyp + '% yes.';
+    } else {
+      dot.className = 'yesterday-dot tbd';
+      txt.innerHTML = '<strong>' + dateStr + '</strong> — outcome not recorded yet. ' + yyp + '% voted yes.';
+    }
+  } else {
+    ycard.style.display = 'none';
+  }
+}
+
+function updateTicker() {
+  const base = ['MITCHWATCH DAILY FORECAST', 'WILL HE OR WON\'T HE', 'VOTE. SPECULATE. REPEAT.', 'OFFICE INTELLIGENCE NETWORK'];
+  const t = pollData && pollData.today;
+  if (t) {
+    const yes = Number(t.yes_votes), no = Number(t.no_votes), total = yes + no;
+    base.push('TODAY: ' + total + ' VOTES CAST');
+    base.push('YES ' + pct(yes, no) + '% · NO ' + pct(no, yes) + '%');
+  }
+  const items = [...base, ...base].map(s => '<span>' + s + ' <span class="dot-sep">·</span></span>').join('');
+  document.getElementById('ticker-inner').innerHTML = items;
+}
+
+async function castVote(choice) {
+  if (hasVotedToday) return;
+  try {
+    const r = await fetch('/api/vote', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ choice })
+    });
+    const data = await r.json();
+    if (data.success) {
+      localStorage.setItem(todayKey(), choice);
+      hasVotedToday = true; myVote = choice;
+      if (data.today) pollData.today = data.today;
+      transitionTo('screen-vote', 'screen-results');
+      renderResults();
+    }
+  } catch(e) { console.error(e); }
+}
+
+function showResults() {
+  transitionTo('screen-vote', 'screen-results');
+  renderResults();
+}
+
+function goBack() {
+  transitionTo('screen-results', 'screen-vote');
+}
+
+function transitionTo(fromId, toId) {
+  const from = document.getElementById(fromId);
+  const to = document.getElementById(toId);
+  from.classList.add('exit');
+  setTimeout(() => {
+    from.classList.remove('active', 'exit');
+    to.classList.add('active');
+  }, 480);
+}
+
+async function init() {
+  checkLocalVote();
+  await loadPoll();
+  updateTicker();
+  const d = new Date();
+  document.getElementById('vote-date-label').textContent =
+    d.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+  if (hasVotedToday) {
+    document.getElementById('pre-vote').style.display = 'none';
+    document.getElementById('already-voted').style.display = 'block';
+    const badge = document.getElementById('voted-badge-label');
+    badge.textContent = myVote === 'yes' ? 'You voted: Yes' : 'You voted: No';
+    badge.className = 'voted-badge ' + myVote;
+  }
+}
+
+init();
+</script>
 </body>
 </html>
