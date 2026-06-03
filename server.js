@@ -51,63 +51,76 @@ function saveDb() {
   fs.writeFileSync(DB_PATH, Buffer.from(data));
 }
 
+// Get ET offset in ms at a given UTC time (handles DST correctly)
+function getETOffsetMs(utcDate) {
+  const utcStr = utcDate.toLocaleString('en-US', { timeZone: 'UTC', hour12: false,
+    year: 'numeric', month: '2-digit', day: '2-digit',
+    hour: '2-digit', minute: '2-digit', second: '2-digit' });
+  const etStr = utcDate.toLocaleString('en-US', { timeZone: TZ, hour12: false,
+    year: 'numeric', month: '2-digit', day: '2-digit',
+    hour: '2-digit', minute: '2-digit', second: '2-digit' });
+  return new Date(utcStr).getTime() - new Date(etStr).getTime();
+}
+
 function getPollInfo() {
   const now = new Date();
-  const etDate = new Date(now.toLocaleString('en-US', { timeZone: TZ }));
+
+  // Get current ET date/time components
+  const etStr = now.toLocaleString('en-US', { timeZone: TZ, hour12: false,
+    year: 'numeric', month: '2-digit', day: '2-digit',
+    hour: '2-digit', minute: '2-digit', second: '2-digit' });
+  const etDate = new Date(etStr);
   const etHour = etDate.getHours();
   const etMinute = etDate.getMinutes();
   const etTotalMinutes = etHour * 60 + etMinute;
 
-  const year = etDate.getFullYear();
-  const month = String(etDate.getMonth() + 1).padStart(2, '0');
-  const day = String(etDate.getDate()).padStart(2, '0');
-  const todayET = `${year}-${month}-${day}`;
+  // ET date strings
+  const pad = n => String(n).padStart(2, '0');
+  const todayET = `${etDate.getFullYear()}-${pad(etDate.getMonth()+1)}-${pad(etDate.getDate())}`;
 
-  const tomorrowDate = new Date(etDate);
-  tomorrowDate.setDate(tomorrowDate.getDate() + 1);
-  const tomorrowET = `${tomorrowDate.getFullYear()}-${String(tomorrowDate.getMonth()+1).padStart(2,'0')}-${String(tomorrowDate.getDate()).padStart(2,'0')}`;
+  const tom = new Date(etDate); tom.setDate(tom.getDate() + 1);
+  const tomorrowET = `${tom.getFullYear()}-${pad(tom.getMonth()+1)}-${pad(tom.getDate())}`;
 
-  const yesterdayDate = new Date(etDate);
-  yesterdayDate.setDate(yesterdayDate.getDate() - 1);
-  const yesterdayET = `${yesterdayDate.getFullYear()}-${String(yesterdayDate.getMonth()+1).padStart(2,'0')}-${String(yesterdayDate.getDate()).padStart(2,'0')}`;
+  const yes = new Date(etDate); yes.setDate(yes.getDate() - 1);
+  const yesterdayET = `${yes.getFullYear()}-${pad(yes.getMonth()+1)}-${pad(yes.getDate())}`;
 
+  // Determine window
   let votingOpen = false;
   let pollDate = null;
   let deadWindow = false;
 
   if (etTotalMinutes >= 720) {
-    // 12pm to midnight: voting open, predicting tomorrow
+    // 12pm–midnight: open, predicting tomorrow
     votingOpen = true;
     pollDate = tomorrowET;
   } else if (etTotalMinutes < 180) {
-    // midnight to 3am: voting open, predicting today
+    // midnight–3am: open, predicting today
     votingOpen = true;
     pollDate = todayET;
   } else {
-    // 3am to noon: dead window
-    votingOpen = false;
+    // 3am–noon: dead window
     deadWindow = true;
-    pollDate = null;
   }
 
-// Next noon ET — construct the target time string and let Date parse it as ET
-  let nextNoonDate = new Date(etDate);
+  // Calculate next noon ET in UTC
+  // Figure out which calendar day noon ET falls on next
+  let noonDateET;
   if (etTotalMinutes >= 720) {
-    nextNoonDate.setDate(nextNoonDate.getDate() + 1);
+    // Past noon today, next noon is tomorrow
+    noonDateET = tomorrowET;
+  } else {
+    // Before noon today, next noon is today
+    noonDateET = todayET;
   }
-  const ny = nextNoonDate.getFullYear();
-  const nm = String(nextNoonDate.getMonth() + 1).padStart(2, '0');
-  const nd = String(nextNoonDate.getDate()).padStart(2, '0');
-  // Build an ET noon string and convert to UTC via Intl
-  const noonETStr = `${ny}-${nm}-${nd}T12:00:00`;
-  const noonUTCMs = new Date(new Date(noonETStr).toLocaleString('en-US', { timeZone: 'UTC' })).getTime()
-    + (new Date(noonETStr + ' ET').getTimezoneOffset ? 0 : 0);
-  // Reliable method: use a fixed offset aware approach
-  const formatter = new Intl.DateTimeFormat('en-US', { timeZone: TZ, hour: 'numeric', hour12: false });
-  const nowUTC = now.getTime();
-  const etOffsetMs = new Date(now.toLocaleString('en-US', { timeZone: 'UTC' })).getTime() - new Date(now.toLocaleString('en-US', { timeZone: TZ })).getTime();
-  const nextNoonUTC = new Date(`${ny}-${nm}-${nd}T12:00:00`).getTime() + etOffsetMs;
-  const nextNoonUTCStr = new Date(nextNoonUTC).toISOString();
+
+  // Build noon UTC by taking ET offset into account
+  // Parse "YYYY-MM-DD 12:00:00" as if it were UTC, then shift by ET offset
+  const noonAsIfUTC = new Date(`${noonDateET}T12:00:00.000Z`);
+  const etOffset = getETOffsetMs(now); // ET is behind UTC, so this is positive (e.g. 4*3600000 for EDT)
+  const nextNoonUTC = new Date(noonAsIfUTC.getTime() + etOffset).toISOString();
+
+  return { votingOpen, deadWindow, pollDate, todayET, tomorrowET, yesterdayET, etTotalMinutes, nextNoonUTC };
+}
 
 function ensurePoll(pollDate) {
   if (!pollDate) return;
@@ -144,7 +157,6 @@ function getHistory() {
 app.get('/api/poll', (req, res) => {
   const info = getPollInfo();
   if (info.votingOpen) ensurePoll(info.pollDate);
-  // During dead window, fetch today's poll to show closing results
   const fetchDate = info.pollDate || info.todayET;
   const current = getPoll(fetchDate);
   const lastArchived = getLastArchivedPoll();
@@ -174,7 +186,8 @@ app.post('/api/vote', (req, res) => {
   if (alreadyVoted) return res.status(409).json({ error: 'Already voted', alreadyVoted: true });
   const col = choice === 'yes' ? 'yes_votes' : 'no_votes';
   db.run(`UPDATE polls SET ${col} = ${col} + 1 WHERE poll_date = ?`, [pollDate]);
-  db.run(`INSERT INTO vote_log (poll_date, ip, choice, voted_at) VALUES (?, ?, ?, ?)`, [pollDate, ip, choice, new Date().toISOString()]);
+  db.run(`INSERT INTO vote_log (poll_date, ip, choice, voted_at) VALUES (?, ?, ?, ?)`,
+    [pollDate, ip, choice, new Date().toISOString()]);
   saveDb();
   res.json({ success: true, current: getPoll(pollDate) });
 });
