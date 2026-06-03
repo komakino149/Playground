@@ -8,125 +8,62 @@
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  :root {
-    --ink: #0f0e0d; --paper: #f5f0e8; --accent: #d94f2b;
-    --yes: #2a7d4f; --no: #c0392b; --muted: #7a7268;
-    --border: #d4cfc4; --card: #faf7f2;
-  }
-  body {
-    font-family: 'DM Sans', sans-serif;
-    background: var(--paper); color: var(--ink);
-    min-height: 100vh; display: flex;
-    align-items: flex-start; justify-content: center;
-    padding: 3rem 1.5rem 4rem;
-  }
-  .wrap { width: 100%; max-width: 480px; }
-  .wordmark {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 36px; letter-spacing: 0.06em;
-    margin-bottom: 2px;
-  }
+  :root { --ink: #0f0e0d; --paper: #f5f0e8; --accent: #d94f2b; --yes: #2a7d4f; --no: #c0392b; --muted: #7a7268; --border: #d4cfc4; --card: #faf7f2; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--paper); color: var(--ink); min-height: 100vh; padding: 2.5rem 1.5rem 5rem; }
+  .wrap { width: 100%; max-width: 560px; margin: 0 auto; }
+  .wordmark { font-family: 'Bebas Neue', sans-serif; font-size: 32px; letter-spacing: 0.06em; }
   .wordmark span { color: var(--accent); }
-  .eyebrow {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px; letter-spacing: 0.16em;
-    text-transform: uppercase; color: var(--muted);
-    margin-bottom: 2rem;
-  }
-  .card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 6px; padding: 26px;
-    margin-bottom: 16px;
-  }
-  .card-heading {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 20px; letter-spacing: 0.06em;
-    margin-bottom: 14px;
-  }
-  label {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px; letter-spacing: 0.14em;
-    text-transform: uppercase; color: var(--muted);
-    display: block; margin-bottom: 5px; margin-top: 12px;
-  }
+  .eyebrow { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); margin-bottom: 2rem; margin-top: 2px; }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 6px; padding: 22px; margin-bottom: 14px; }
+  .card-heading { font-family: 'Bebas Neue', sans-serif; font-size: 18px; letter-spacing: 0.06em; margin-bottom: 14px; }
+  label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); display: block; margin-bottom: 4px; margin-top: 10px; }
   label:first-of-type { margin-top: 0; }
-  input[type="password"] {
-    width: 100%; padding: 10px 14px;
-    font-size: 14px; font-family: 'DM Sans', sans-serif;
-    background: var(--paper); border: 1px solid var(--border);
-    border-radius: 4px; color: var(--ink); outline: none;
-    transition: border-color 0.15s;
-  }
+  input[type="password"], input[type="text"], input[type="date"], input[type="number"] { width: 100%; padding: 9px 12px; font-size: 13px; font-family: 'DM Sans', sans-serif; background: var(--paper); border: 1px solid var(--border); border-radius: 4px; color: var(--ink); outline: none; transition: border-color 0.15s; }
   input:focus { border-color: var(--ink); }
-  .btn {
-    width: 100%; padding: 11px;
-    font-family: 'DM Mono', monospace;
-    font-size: 11px; letter-spacing: 0.14em;
-    text-transform: uppercase;
-    background: var(--ink); color: var(--paper);
-    border: none; border-radius: 4px;
-    cursor: pointer; transition: opacity 0.15s;
-    margin-top: 12px;
-  }
+  .btn { width: 100%; padding: 10px; font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; background: var(--ink); color: var(--paper); border: none; border-radius: 4px; cursor: pointer; transition: opacity 0.15s; margin-top: 10px; }
   .btn:hover { opacity: 0.82; }
-  .btn.outline {
-    background: none; color: var(--ink);
-    border: 1px solid var(--border);
-  }
+  .btn.outline { background: none; color: var(--ink); border: 1px solid var(--border); }
   .btn.outline:hover { border-color: var(--ink); }
-  .btn.danger {
-    background: none; color: var(--no);
-    border: 1px solid var(--no);
-  }
-  .outcome-pair { display: flex; gap: 10px; margin-top: 10px; }
-  .outcome-opt {
-    flex: 1; padding: 14px 10px;
-    background: var(--paper); border: 1.5px solid var(--border);
-    border-radius: 4px; cursor: pointer;
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 26px; letter-spacing: 0.06em;
-    text-align: center; color: var(--muted);
-    transition: border-color 0.15s, color 0.15s, background 0.15s;
-  }
-  .outcome-opt small {
-    display: block; font-family: 'DM Mono', monospace;
-    font-size: 10px; letter-spacing: 0.1em;
-    text-transform: uppercase; margin-top: 2px;
-  }
+  .btn.danger { background: none; color: var(--no); border: 1px solid var(--no); }
+  .btn.sm { width: auto; padding: 6px 12px; font-size: 10px; margin-top: 0; }
+  .outcome-pair { display: flex; gap: 8px; margin-top: 8px; }
+  .outcome-opt { flex: 1; padding: 12px 8px; background: var(--paper); border: 1.5px solid var(--border); border-radius: 4px; cursor: pointer; font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 0.06em; text-align: center; color: var(--muted); transition: all 0.15s; }
+  .outcome-opt small { display: block; font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; margin-top: 2px; }
   .outcome-opt:hover { border-color: var(--ink); color: var(--ink); }
   .outcome-opt.sel-yes { border-color: var(--yes); color: var(--yes); background: #e6f4ed; }
   .outcome-opt.sel-no { border-color: var(--no); color: var(--no); background: #faeaea; }
-  .divider { border: none; border-top: 1px solid var(--border); margin: 18px 0; }
-  .msg {
-    font-family: 'DM Mono', monospace;
-    font-size: 11px; padding: 8px 12px;
-    border-radius: 4px; margin-top: 10px;
-    letter-spacing: 0.04em;
-  }
+  .divider { border: none; border-top: 1px solid var(--border); margin: 16px 0; }
+  .msg { font-family: 'DM Mono', monospace; font-size: 11px; padding: 7px 10px; border-radius: 4px; margin-top: 8px; letter-spacing: 0.04em; }
   .msg.ok { background: #e6f4ed; color: var(--yes); }
   .msg.err { background: #faeaea; color: var(--no); }
-  .stat-row {
-    display: flex; justify-content: space-between;
-    font-family: 'DM Mono', monospace;
-    font-size: 12px; color: var(--muted);
-    padding: 6px 0; border-bottom: 1px solid var(--border);
-  }
+  .stat-row { display: flex; justify-content: space-between; font-family: 'DM Mono', monospace; font-size: 11px; color: var(--muted); padding: 5px 0; border-bottom: 1px solid var(--border); }
   .stat-row:last-child { border-bottom: none; }
-  .stat-val { color: var(--ink); font-weight: 500; }
-  .hist-row {
-    display: flex; justify-content: space-between; align-items: center;
-    padding: 7px 0; border-bottom: 1px solid var(--border);
-    font-family: 'DM Mono', monospace; font-size: 11px; color: var(--muted);
-  }
-  .hist-row:last-child { border-bottom: none; }
-  .pill {
-    padding: 2px 9px; border-radius: 999px; font-size: 10px;
-    letter-spacing: 0.08em; text-transform: uppercase;
-  }
+  .stat-val { color: var(--ink); }
+  .hist-table { width: 100%; border-collapse: collapse; font-family: 'DM Mono', monospace; font-size: 11px; }
+  .hist-table th { text-align: left; color: var(--muted); font-weight: 400; letter-spacing: 0.08em; text-transform: uppercase; font-size: 10px; padding: 0 8px 8px 0; border-bottom: 1px solid var(--border); }
+  .hist-table td { padding: 8px 8px 8px 0; border-bottom: 1px solid var(--border); vertical-align: middle; color: var(--muted); }
+  .hist-table tr:last-child td { border-bottom: none; }
+  .pill { padding: 2px 8px; border-radius: 999px; font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase; }
   .pill.yes { background: #e6f4ed; color: var(--yes); }
   .pill.no { background: #faeaea; color: var(--no); }
   .pill.tbd { background: var(--border); color: var(--muted); }
+  .edit-btn { background: none; border: 1px solid var(--border); border-radius: 3px; padding: 3px 8px; font-family: 'DM Mono', monospace; font-size: 10px; color: var(--muted); cursor: pointer; }
+  .edit-btn:hover { border-color: var(--ink); color: var(--ink); }
+  .del-btn { background: none; border: none; font-family: 'DM Mono', monospace; font-size: 10px; color: var(--no); cursor: pointer; padding: 3px 6px; }
+  .edit-row { background: #f0ece3; }
+  .edit-row td { padding: 10px 8px 10px 0; }
+  .edit-inline { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+  .edit-inline input { width: 60px; padding: 4px 6px; font-size: 11px; }
+  .edit-inline select { padding: 4px 6px; font-size: 11px; font-family: 'DM Mono', monospace; background: var(--paper); border: 1px solid var(--border); border-radius: 4px; color: var(--ink); outline: none; }
+  .ip-row { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid var(--border); font-family: 'DM Mono', monospace; font-size: 11px; color: var(--muted); gap: 8px; }
+  .ip-row:last-child { border-bottom: none; }
+  .ip-choice.yes { color: var(--yes); font-weight: 500; }
+  .ip-choice.no { color: var(--no); font-weight: 500; }
+  .tabs { display: flex; gap: 6px; margin-bottom: 14px; }
+  .tab { flex: 1; padding: 7px; font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; background: none; border: 1px solid var(--border); border-radius: 4px; cursor: pointer; color: var(--muted); transition: all 0.15s; }
+  .tab.active { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
   #panel { display: none; }
 </style>
 </head>
@@ -135,8 +72,7 @@
   <p class="wordmark">Mitch<span>Watch</span></p>
   <p class="eyebrow">Admin Panel</p>
 
-  <!-- LOGIN -->
-  <div id="login-section" class="card">
+  <div id="login-card" class="card">
     <p class="card-heading">Authenticate</p>
     <label>Password</label>
     <input type="password" id="pw-input" placeholder="Enter password" onkeydown="if(event.key==='Enter')login()">
@@ -144,40 +80,80 @@
     <div id="login-msg"></div>
   </div>
 
-  <!-- PANEL -->
   <div id="panel">
-    <!-- TODAY'S STATS -->
-    <div class="card">
-      <p class="card-heading">Today's poll</p>
-      <div id="today-stats"></div>
-
-      <div class="divider"></div>
-
-      <p style="font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.14em; text-transform:uppercase; color:var(--muted); margin-bottom:2px;">Record outcome — did Mitch come in?</p>
-      <div class="outcome-pair">
-        <button class="outcome-opt" id="ob-yes" onclick="selectOutcome('yes')">
-          Yes<small>came in</small>
-        </button>
-        <button class="outcome-opt" id="ob-no" onclick="selectOutcome('no')">
-          No<small>no-show</small>
-        </button>
-      </div>
-      <button class="btn" onclick="archiveDay()">Save & Archive Day</button>
-      <div id="archive-msg"></div>
+    <div class="tabs">
+      <button class="tab active" onclick="showTab('today')">Today</button>
+      <button class="tab" onclick="showTab('history')">History</button>
+      <button class="tab" onclick="showTab('iplog')">IP Log</button>
     </div>
 
-    <!-- DANGER ZONE -->
-    <div class="card">
-      <p class="card-heading">Reset</p>
-      <p style="font-size:13px; color:var(--muted); margin-bottom:12px; font-weight:300;">Wipe today's votes and start fresh. Cannot be undone.</p>
-      <button class="btn danger" onclick="resetVotes()">Reset Today's Votes</button>
-      <div id="reset-msg"></div>
+    <!-- TODAY -->
+    <div class="tab-panel active" id="tab-today">
+      <div class="card">
+        <p class="card-heading">Current Poll</p>
+        <div id="today-stats"></div>
+        <div class="divider"></div>
+        <label>Record outcome — did Mitch show up?</label>
+        <div class="outcome-pair">
+          <button class="outcome-opt" id="ob-yes" onclick="selectOutcome('yes')">Yes<small>came in</small></button>
+          <button class="outcome-opt" id="ob-no" onclick="selectOutcome('no')">No<small>no-show</small></button>
+        </div>
+        <button class="btn" onclick="saveOutcome()">Save Outcome</button>
+        <div id="outcome-msg"></div>
+      </div>
+      <div class="card">
+        <p class="card-heading">Danger Zone</p>
+        <p style="font-size:13px;color:var(--muted);margin-bottom:10px;font-weight:300;">Wipe all votes for the current poll period.</p>
+        <button class="btn danger" onclick="resetVotes()">Reset Current Votes</button>
+        <div id="reset-msg"></div>
+      </div>
     </div>
 
     <!-- HISTORY -->
-    <div class="card">
-      <p class="card-heading">History</p>
-      <div id="history-list"><p style="font-size:13px;color:var(--muted);">Loading…</p></div>
+    <div class="tab-panel" id="tab-history">
+      <div class="card">
+        <p class="card-heading">Add Missing Day</p>
+        <div style="display:flex;gap:8px;align-items:flex-end;flex-wrap:wrap;">
+          <div style="flex:1;min-width:120px;">
+            <label>Poll Date</label>
+            <input type="date" id="add-date">
+          </div>
+          <div style="width:65px;">
+            <label>Yes</label>
+            <input type="number" id="add-yes" value="0" min="0">
+          </div>
+          <div style="width:65px;">
+            <label>No</label>
+            <input type="number" id="add-no" value="0" min="0">
+          </div>
+          <div style="width:85px;">
+            <label>Outcome</label>
+            <select id="add-outcome" style="width:100%;padding:9px 6px;font-size:13px;font-family:'DM Sans',sans-serif;background:var(--paper);border:1px solid var(--border);border-radius:4px;color:var(--ink);">
+              <option value="">TBD</option>
+              <option value="yes">Yes</option>
+              <option value="no">No</option>
+            </select>
+          </div>
+        </div>
+        <button class="btn outline" onclick="addDay()">Add Day</button>
+        <div id="add-msg"></div>
+      </div>
+      <div class="card">
+        <p class="card-heading">History</p>
+        <div id="history-list"><p style="font-size:13px;color:var(--muted);">Loading…</p></div>
+      </div>
+    </div>
+
+    <!-- IP LOG -->
+    <div class="tab-panel" id="tab-iplog">
+      <div class="card">
+        <p class="card-heading">IP Vote Log</p>
+        <label>Select poll date</label>
+        <select id="ip-date-select" onchange="loadIPLog()" style="width:100%;padding:9px 12px;font-size:13px;font-family:'DM Sans',sans-serif;background:var(--paper);border:1px solid var(--border);border-radius:4px;color:var(--ink);margin-bottom:12px;">
+          <option value="">— select a date —</option>
+        </select>
+        <div id="ip-log-list"></div>
+      </div>
     </div>
   </div>
 </div>
@@ -185,108 +161,182 @@
 <script>
 let adminPw = '';
 let selectedOutcome = null;
+let adminData = null;
+let editingDate = null;
 
-function API(path) { return path; }
+function showTab(name) {
+  document.querySelectorAll('.tab').forEach((t,i) => {
+    t.classList.toggle('active', ['today','history','iplog'][i] === name);
+  });
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+}
 
 async function login() {
   const pw = document.getElementById('pw-input').value;
   try {
-    const r = await fetch('/api/admin/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ password: pw })
-    });
+    const r = await fetch('/api/admin/login', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({password: pw}) });
     const d = await r.json();
     if (d.success) {
       adminPw = pw;
-      document.getElementById('login-section').style.display = 'none';
+      document.getElementById('login-card').style.display = 'none';
       document.getElementById('panel').style.display = 'block';
       loadAdminData();
-    } else {
-      showMsg('login-msg', 'Wrong password.', 'err');
-    }
+    } else showMsg('login-msg', 'Wrong password.', 'err');
   } catch(e) { showMsg('login-msg', 'Server error.', 'err'); }
 }
 
 async function loadAdminData() {
-  try {
-    const r = await fetch('/api/admin/data', { headers: { 'x-admin-password': adminPw } });
-    const d = await r.json();
-    renderTodayStats(d.today);
-    renderHistory(d.history);
-  } catch(e) {}
+  const r = await fetch('/api/admin/data', { headers: {'x-admin-password': adminPw} });
+  adminData = await r.json();
+  renderToday();
+  renderHistory();
+  populateDateSelect();
 }
 
-function renderTodayStats(t) {
-  const yes = t ? Number(t.yes_votes) : 0;
-  const no = t ? Number(t.no_votes) : 0;
+function renderToday() {
+  const c = adminData.current;
+  const yes = c ? +c.yes_votes : 0;
+  const no = c ? +c.no_votes : 0;
   const total = yes + no;
-  const yp = total === 0 ? 0 : Math.round(yes / total * 100);
+  const yp = total === 0 ? 0 : Math.round(yes/total*100);
+  const info = adminData.pollInfo;
+  const status = info.votingOpen ? 'Voting open · predicting ' + (info.pollDate||'—') : info.deadWindow ? 'Dead window (3am–noon ET)' : '—';
   document.getElementById('today-stats').innerHTML = `
+    <div class="stat-row"><span>Status</span><span class="stat-val">${status}</span></div>
     <div class="stat-row"><span>Yes votes</span><span class="stat-val">${yes} (${yp}%)</span></div>
-    <div class="stat-row"><span>No votes</span><span class="stat-val">${no} (${100 - yp}%)</span></div>
-    <div class="stat-row"><span>Total votes</span><span class="stat-val">${total}</span></div>
-  `;
+    <div class="stat-row"><span>No votes</span><span class="stat-val">${no} (${100-yp}%)</span></div>
+    <div class="stat-row"><span>Total</span><span class="stat-val">${total}</span></div>`;
 }
 
-function renderHistory(rows) {
-  if (!rows || rows.length === 0) {
-    document.getElementById('history-list').innerHTML = '<p style="font-size:13px;color:var(--muted);">No archived days yet.</p>';
-    return;
-  }
-  document.getElementById('history-list').innerHTML = rows.map(h => {
-    const yes = Number(h.yes_votes), no = Number(h.no_votes), total = yes + no;
-    const yp = total === 0 ? 0 : Math.round(yes / total * 100);
+function renderHistory() {
+  const rows = adminData.history || [];
+  if (!rows.length) { document.getElementById('history-list').innerHTML = '<p style="font-size:13px;color:var(--muted);">No history yet.</p>'; return; }
+  let html = '<table class="hist-table"><thead><tr><th>Date</th><th>Yes</th><th>No</th><th>Outcome</th><th></th></tr></thead><tbody>';
+  rows.forEach(h => {
     const oc = h.outcome || 'tbd';
-    const olabel = h.outcome === 'yes' ? 'Came in' : h.outcome === 'no' ? 'No-show' : 'TBD';
-    return `<div class="hist-row">
-      <span>${h.date}</span>
-      <span>${yp}% yes · ${total} votes</span>
-      <span class="pill ${oc}">${olabel}</span>
-    </div>`;
+    const olabel = h.outcome === 'yes' ? 'Yes' : h.outcome === 'no' ? 'No' : 'TBD';
+    if (editingDate === h.poll_date) {
+      html += `<tr class="edit-row"><td colspan="5"><div class="edit-inline">
+        <span style="font-size:11px;color:var(--ink);white-space:nowrap;">${h.poll_date}</span>
+        <label style="margin:0;display:inline;">Yes:</label>
+        <input type="number" id="edit-yes" value="${h.yes_votes}" min="0">
+        <label style="margin:0;display:inline;">No:</label>
+        <input type="number" id="edit-no" value="${h.no_votes}" min="0">
+        <select id="edit-outcome">
+          <option value="" ${!h.outcome?'selected':''}>TBD</option>
+          <option value="yes" ${h.outcome==='yes'?'selected':''}>Yes</option>
+          <option value="no" ${h.outcome==='no'?'selected':''}>No</option>
+        </select>
+        <button class="btn sm" onclick="saveEdit('${h.poll_date}')">Save</button>
+        <button class="btn sm outline" onclick="cancelEdit()">Cancel</button>
+      </div></td></tr>`;
+    } else {
+      html += `<tr>
+        <td style="color:var(--ink);">${h.poll_date}</td>
+        <td>${h.yes_votes}</td><td>${h.no_votes}</td>
+        <td><span class="pill ${oc}">${olabel}</span></td>
+        <td style="display:flex;gap:4px;">
+          <button class="edit-btn" onclick="startEdit('${h.poll_date}')">Edit</button>
+          <button class="del-btn" onclick="deleteDay('${h.poll_date}')">✕</button>
+        </td></tr>`;
+    }
+  });
+  html += '</tbody></table>';
+  document.getElementById('history-list').innerHTML = html;
+}
+
+function populateDateSelect() {
+  const sel = document.getElementById('ip-date-select');
+  // Clear existing options except first
+  while (sel.options.length > 1) sel.remove(1);
+  const rows = adminData.history || [];
+  if (adminData.pollInfo.pollDate) {
+    const opt = document.createElement('option');
+    opt.value = adminData.pollInfo.pollDate;
+    opt.textContent = adminData.pollInfo.pollDate + ' (current)';
+    sel.appendChild(opt);
+  }
+  rows.forEach(h => {
+    const opt = document.createElement('option');
+    opt.value = h.poll_date;
+    opt.textContent = h.poll_date;
+    sel.appendChild(opt);
+  });
+}
+
+async function loadIPLog() {
+  const date = document.getElementById('ip-date-select').value;
+  if (!date) { document.getElementById('ip-log-list').innerHTML = ''; return; }
+  const r = await fetch('/api/admin/votes/' + date, { headers: {'x-admin-password': adminPw} });
+  const d = await r.json();
+  const list = document.getElementById('ip-log-list');
+  if (!d.votes || !d.votes.length) { list.innerHTML = '<p style="font-size:12px;color:var(--muted);font-family:\'DM Mono\',monospace;">No votes for this date.</p>'; return; }
+  list.innerHTML = d.votes.map(v => {
+    const time = new Date(v.voted_at).toLocaleString('en-US', {timeZone:'America/New_York', month:'short', day:'numeric', hour:'numeric', minute:'2-digit', hour12:true});
+    return `<div class="ip-row"><span>${v.ip}</span><span class="ip-choice ${v.choice}">${v.choice.toUpperCase()}</span><span style="white-space:nowrap;">${time} ET</span></div>`;
   }).join('');
 }
 
 function selectOutcome(v) {
   selectedOutcome = v;
-  document.getElementById('ob-yes').className = 'outcome-opt' + (v === 'yes' ? ' sel-yes' : '');
-  document.getElementById('ob-no').className = 'outcome-opt' + (v === 'no' ? ' sel-no' : '');
+  document.getElementById('ob-yes').className = 'outcome-opt' + (v==='yes'?' sel-yes':'');
+  document.getElementById('ob-no').className = 'outcome-opt' + (v==='no'?' sel-no':'');
 }
 
-async function archiveDay() {
-  if (!selectedOutcome) { showMsg('archive-msg', 'Select an outcome first.', 'err'); return; }
-  try {
-    const r = await fetch('/api/admin/archive', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'x-admin-password': adminPw },
-      body: JSON.stringify({ outcome: selectedOutcome })
-    });
-    const d = await r.json();
-    if (d.success) {
-      showMsg('archive-msg', 'Archived! Poll reset for tomorrow.', 'ok');
-      selectedOutcome = null;
-      document.getElementById('ob-yes').className = 'outcome-opt';
-      document.getElementById('ob-no').className = 'outcome-opt';
-      loadAdminData();
-    }
-  } catch(e) { showMsg('archive-msg', 'Error.', 'err'); }
+async function saveOutcome() {
+  if (!selectedOutcome) { showMsg('outcome-msg','Select an outcome first.','err'); return; }
+  const pollDate = adminData.pollInfo.pollDate || adminData.current?.poll_date;
+  if (!pollDate) { showMsg('outcome-msg','No active poll date.','err'); return; }
+  const r = await fetch('/api/admin/archive', { method:'POST', headers:{'Content-Type':'application/json','x-admin-password':adminPw}, body:JSON.stringify({outcome:selectedOutcome, pollDate}) });
+  const d = await r.json();
+  if (d.success) { showMsg('outcome-msg','Outcome saved.','ok'); loadAdminData(); }
+  else showMsg('outcome-msg','Error.','err');
 }
 
 async function resetVotes() {
-  if (!confirm('Wipe all votes for today?')) return;
-  try {
-    const r = await fetch('/api/admin/reset', {
-      method: 'POST', headers: { 'x-admin-password': adminPw }
-    });
-    const d = await r.json();
-    if (d.success) { showMsg('reset-msg', 'Votes cleared.', 'ok'); loadAdminData(); }
-  } catch(e) { showMsg('reset-msg', 'Error.', 'err'); }
+  if (!confirm('Wipe all votes for the current poll?')) return;
+  const r = await fetch('/api/admin/reset', { method:'POST', headers:{'x-admin-password':adminPw} });
+  const d = await r.json();
+  if (d.success) { showMsg('reset-msg','Votes cleared.','ok'); loadAdminData(); }
+}
+
+function startEdit(date) { editingDate = date; renderHistory(); }
+function cancelEdit() { editingDate = null; renderHistory(); }
+
+async function saveEdit(date) {
+  const yes = parseInt(document.getElementById('edit-yes').value)||0;
+  const no = parseInt(document.getElementById('edit-no').value)||0;
+  const outcome = document.getElementById('edit-outcome').value||null;
+  const r = await fetch('/api/admin/history/'+date, { method:'PUT', headers:{'Content-Type':'application/json','x-admin-password':adminPw}, body:JSON.stringify({yes_votes:yes, no_votes:no, outcome, archived:1}) });
+  const d = await r.json();
+  if (d.success) { editingDate=null; loadAdminData(); }
+}
+
+async function deleteDay(date) {
+  if (!confirm('Delete '+date+'? Cannot be undone.')) return;
+  const r = await fetch('/api/admin/history/'+date, { method:'DELETE', headers:{'x-admin-password':adminPw} });
+  const d = await r.json();
+  if (d.success) loadAdminData();
+}
+
+async function addDay() {
+  const date = document.getElementById('add-date').value;
+  if (!date) { showMsg('add-msg','Please select a date.','err'); return; }
+  const yes = parseInt(document.getElementById('add-yes').value)||0;
+  const no = parseInt(document.getElementById('add-no').value)||0;
+  const outcome = document.getElementById('add-outcome').value||null;
+  const r = await fetch('/api/admin/history/'+date, { method:'PUT', headers:{'Content-Type':'application/json','x-admin-password':adminPw}, body:JSON.stringify({yes_votes:yes, no_votes:no, outcome, archived:1}) });
+  const d = await r.json();
+  if (d.success) { showMsg('add-msg','Day added.','ok'); loadAdminData(); }
+  else showMsg('add-msg','Error.','err');
 }
 
 function showMsg(id, text, type) {
   const el = document.getElementById(id);
-  el.innerHTML = `<div class="msg ${type}">${text}</div>`;
-  setTimeout(() => { el.innerHTML = ''; }, 4000);
+  if (!el) return;
+  el.innerHTML = '<div class="msg '+type+'">'+text+'</div>';
+  setTimeout(() => { el.innerHTML=''; }, 4000);
 }
 </script>
 </body>
