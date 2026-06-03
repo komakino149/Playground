@@ -51,17 +51,48 @@
   .masthead-sub { font-size: 14px; color: var(--muted); margin-top: 8px; font-weight: 300; }
 
   .vote-pair { display: flex; gap: 14px; width: 100%; max-width: 420px; }
-  .vote-btn { flex: 1; padding: 0; background: none; cursor: pointer; border: 1.5px solid var(--border); border-radius: 4px; overflow: hidden; transition: border-color 0.2s, transform 0.15s; }
+  .vote-btn {
+    flex: 1; padding: 0; background: none; cursor: pointer;
+    border: 1.5px solid var(--border); border-radius: 4px; overflow: hidden;
+    transition: border-color 0.2s, transform 0.15s;
+    position: relative;
+  }
   .vote-btn:hover { transform: translateY(-2px); }
-  .vote-btn:active { transform: translateY(0) scale(0.98); }
-  .vote-btn-inner { padding: 24px 16px 20px; display: flex; flex-direction: column; align-items: center; gap: 6px; }
-  .vote-btn .label { font-family: 'Bebas Neue', sans-serif; font-size: 38px; letter-spacing: 0.06em; line-height: 1; transition: color 0.2s; }
-  .vote-btn .sublabel { font-size: 10px; font-family: 'DM Mono', monospace; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+  .vote-btn:active { transform: translateY(0) scale(0.96); }
   .vote-btn.yes:hover { border-color: var(--yes); }
   .vote-btn.yes:hover .label { color: var(--yes); }
   .vote-btn.no:hover { border-color: var(--no); }
   .vote-btn.no:hover .label { color: var(--no); }
+  .vote-btn.voting { opacity: 0.6; pointer-events: none; }
+  .vote-btn.voted-yes { border-color: var(--yes); background: #e6f4ed; }
+  .vote-btn.voted-yes .label { color: var(--yes); }
+  .vote-btn.voted-no { border-color: var(--no); background: #faeaea; }
+  .vote-btn.voted-no .label { color: var(--no); }
+  .vote-btn-inner { padding: 24px 16px 20px; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+  .label { font-family: 'Bebas Neue', sans-serif; font-size: 38px; letter-spacing: 0.06em; line-height: 1; transition: color 0.2s; }
+  .sublabel { font-size: 10px; font-family: 'DM Mono', monospace; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+
+  .ripple {
+    position: absolute; border-radius: 50%;
+    transform: scale(0); animation: ripple-anim 0.5s linear;
+    background: rgba(0,0,0,0.08); pointer-events: none;
+  }
+  @keyframes ripple-anim { to { transform: scale(4); opacity: 0; } }
+
   .vote-note { margin-top: 1rem; font-size: 11px; font-family: 'DM Mono', monospace; color: var(--muted); letter-spacing: 0.06em; text-align: center; }
+
+  .logging-msg {
+    margin-top: 1rem; font-family: 'DM Mono', monospace; font-size: 11px;
+    letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted);
+    text-align: center; opacity: 0; transition: opacity 0.2s;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+  }
+  .logging-msg.visible { opacity: 1; }
+  .logging-dot {
+    width: 6px; height: 6px; border-radius: 50%; background: var(--accent);
+    animation: pulse-dot 0.8s ease-in-out infinite;
+  }
+  @keyframes pulse-dot { 0%, 100% { opacity: 1; } 50% { opacity: 0.2; } }
 
   .voted-badge { display: inline-block; padding: 5px 14px; border-radius: 999px; font-size: 11px; font-family: 'DM Mono', monospace; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 1.5rem; }
   .voted-badge.yes { background: #e6f4ed; color: var(--yes); }
@@ -100,12 +131,18 @@
   .verdict-value.no { color: var(--no); }
   .verdict-value.tie { color: var(--muted); }
 
+  .live-indicator { display: flex; align-items: center; gap: 5px; font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--yes); }
+  .live-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--yes); animation: pulse-live 2s ease-in-out infinite; }
+  @keyframes pulse-live { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+
   .results-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; }
   .total-note { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--muted); letter-spacing: 0.06em; }
   .refresh-btn { display: flex; align-items: center; gap: 4px; background: none; border: 0.5px solid var(--border); border-radius: 4px; padding: 5px 10px; cursor: pointer; font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); transition: border-color 0.15s, color 0.15s; }
   .refresh-btn:hover { border-color: var(--ink); color: var(--ink); }
   .refresh-btn.spinning svg { animation: spin 0.7s linear infinite; }
   @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+  .auto-refresh-note { font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--dim); text-align: right; margin-top: 4px; }
 
   .back-btn { margin-top: 1rem; background: none; border: none; font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
   .back-btn:hover { color: var(--ink); }
@@ -116,6 +153,20 @@
   .countdown-time { font-family: 'Bebas Neue', sans-serif; font-size: clamp(52px, 14vw, 96px); letter-spacing: 0.04em; line-height: 1; color: var(--ink); }
   .countdown-sub { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); margin-top: 6px; }
   .dead-prev { width: 100%; }
+
+  .dead-summary { background: var(--card); border: 0.5px solid var(--border); border-radius: 6px; padding: 14px 18px; margin-bottom: 14px; width: 100%; }
+  .dead-summary-heading { font-family: 'Bebas Neue', sans-serif; font-size: 16px; letter-spacing: 0.06em; margin-bottom: 10px; color: var(--ink); }
+  .dead-bar-block { margin-bottom: 10px; }
+  .dead-bar-row { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 4px; }
+  .dead-bar-label { font-size: 11px; font-weight: 500; }
+  .dead-bar-label.yes { color: var(--yes); }
+  .dead-bar-label.no { color: var(--no); }
+  .dead-bar-stat { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--muted); }
+  .dead-bar-track { height: 6px; background: var(--border); border-radius: 999px; overflow: hidden; }
+  .dead-bar-fill { height: 100%; border-radius: 999px; }
+  .dead-bar-fill.yes { background: var(--yes); }
+  .dead-bar-fill.no { background: var(--no); }
+  .dead-verdict { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--muted); letter-spacing: 0.06em; margin-top: 8px; }
 
   .ptr { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: center; gap: 8px; height: 0; overflow: hidden; background: var(--paper); font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); transition: height 0.2s; }
   .ptr.visible { height: 44px; }
@@ -156,18 +207,22 @@
   </div>
   <div id="pre-vote">
     <div class="vote-pair">
-      <button class="vote-btn yes" onclick="castVote('yes')">
+      <button class="vote-btn yes" id="btn-yes" onclick="castVote('yes', event)">
         <div class="vote-btn-inner">
           <span class="label">Yes</span>
           <span class="sublabel">He'll be here</span>
         </div>
       </button>
-      <button class="vote-btn no" onclick="castVote('no')">
+      <button class="vote-btn no" id="btn-no" onclick="castVote('no', event)">
         <div class="vote-btn-inner">
           <span class="label">No</span>
           <span class="sublabel">Ghost mode</span>
         </div>
       </button>
+    </div>
+    <div class="logging-msg" id="logging-msg">
+      <span class="logging-dot"></span>
+      Logging your vote...
     </div>
     <p class="vote-note">one vote per device · voting closes 3am ET · opens 5pm ET</p>
   </div>
@@ -208,6 +263,9 @@
         <p class="verdict-label">Crowd verdict</p>
         <p class="verdict-value tie" id="verdict-value">—</p>
       </div>
+      <div class="live-indicator">
+        <span class="live-dot"></span> Live
+      </div>
     </div>
     <div class="results-footer">
       <p class="total-note" id="total-note">—</p>
@@ -219,6 +277,7 @@
         Refresh
       </button>
     </div>
+    <p class="auto-refresh-note">Auto-refreshing every 30s</p>
     <button class="back-btn" onclick="goBack()">← back</button>
   </div>
 </div>
@@ -230,6 +289,24 @@
       <p class="countdown-label">Voting reopens in</p>
       <p class="countdown-time" id="countdown">00:00:00</p>
       <p class="countdown-sub">Polls open at 5pm ET daily</p>
+    </div>
+    <div id="dead-summary" class="dead-summary" style="display:none;">
+      <p class="dead-summary-heading" id="dead-summary-heading">Final odds</p>
+      <div class="dead-bar-block">
+        <div class="dead-bar-row">
+          <span class="dead-bar-label yes">Yes — he'll show</span>
+          <span class="dead-bar-stat" id="dead-yes-stat">—</span>
+        </div>
+        <div class="dead-bar-track"><div class="dead-bar-fill yes" id="dead-bar-yes" style="width:0%"></div></div>
+      </div>
+      <div class="dead-bar-block">
+        <div class="dead-bar-row">
+          <span class="dead-bar-label no">No — ghost mode</span>
+          <span class="dead-bar-stat" id="dead-no-stat">—</span>
+        </div>
+        <div class="dead-bar-track"><div class="dead-bar-fill no" id="dead-bar-no" style="width:0%"></div></div>
+      </div>
+      <p class="dead-verdict" id="dead-verdict"></p>
     </div>
     <div class="dead-prev" id="dead-prev"></div>
   </div>
@@ -264,6 +341,7 @@ if (localStorage.getItem(GATE_KEY) === '1') {
 let pollData = null;
 let isRefreshing = false;
 let countdownInterval = null;
+let autoRefreshInterval = null;
 
 function todayKey(pollDate) { return 'mitchvote_' + pollDate; }
 function getMyVote(pollDate) { return localStorage.getItem(todayKey(pollDate)); }
@@ -280,6 +358,18 @@ function fmtDate(str) {
   if (!str) return '';
   const d = new Date(str + 'T12:00:00');
   return d.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+}
+
+function addRipple(btn, e) {
+  const rect = btn.getBoundingClientRect();
+  const size = Math.max(rect.width, rect.height) * 2;
+  const x = (e.clientX - rect.left) - size / 2;
+  const y = (e.clientY - rect.top) - size / 2;
+  const ripple = document.createElement('span');
+  ripple.className = 'ripple';
+  ripple.style.cssText = `width:${size}px;height:${size}px;left:${x}px;top:${y}px`;
+  btn.appendChild(ripple);
+  setTimeout(() => ripple.remove(), 600);
 }
 
 function renderPrevCard(poll) {
@@ -335,25 +425,46 @@ function renderResults() {
   renderPrevCard(pollData.lastArchived);
 }
 
+function startAutoRefresh() {
+  if (autoRefreshInterval) clearInterval(autoRefreshInterval);
+  autoRefreshInterval = setInterval(async () => {
+    if (!document.getElementById('screen-results').classList.contains('active')) return;
+    try { await loadPoll(); renderResults(); updateTicker(); } catch(e) {}
+  }, 30000);
+}
+
 function renderDeadWindow() {
   if (!pollData) return;
   const deadPrev = document.getElementById('dead-prev');
   const c = pollData.current;
   const p = pollData.lastArchived;
-  const display = c && (+c.yes_votes + +c.no_votes > 0) ? c : p;
-  if (display) {
-    const yes = +display.yes_votes, no = +display.no_votes, total = yes + no;
+
+  if (c && (+c.yes_votes + +c.no_votes > 0)) {
+    const yes = +c.yes_votes, no = +c.no_votes, total = yes + no;
+    const yp = pct(yes, no), np = pct(no, yes);
+    const crowdSays = yes > no ? 'Probably yes' : no > yes ? 'Probably not' : 'Dead tie';
+    document.getElementById('dead-summary').style.display = 'block';
+    document.getElementById('dead-summary-heading').textContent = 'Final odds — ' + fmtDate(c.poll_date);
+    document.getElementById('dead-yes-stat').textContent = yes + ' vote' + (yes !== 1 ? 's' : '') + ' · ' + yp + '%';
+    document.getElementById('dead-no-stat').textContent = no + ' vote' + (no !== 1 ? 's' : '') + ' · ' + np + '%';
+    document.getElementById('dead-bar-yes').style.width = yp + '%';
+    document.getElementById('dead-bar-no').style.width = np + '%';
+    document.getElementById('dead-verdict').textContent = 'Crowd says: ' + crowdSays + ' · ' + total + ' votes cast';
+  }
+
+  if (p) {
+    const yes = +p.yes_votes, no = +p.no_votes, total = yes + no;
     const yp = total === 0 ? 0 : Math.round(yes/total*100);
     const crowdSays = yes > no ? 'yes' : no > yes ? 'no' : 'tie';
-    const dateStr = fmtDate(display.poll_date);
+    const dateStr = fmtDate(p.poll_date);
     let outcomeText, dotClass;
-    if (display.outcome === 'yes') { outcomeText = 'Mitch came in.'; dotClass = 'yes'; }
-    else if (display.outcome === 'no') { outcomeText = 'Mitch was a no-show.'; dotClass = 'no'; }
+    if (p.outcome === 'yes') { outcomeText = 'Mitch came in.'; dotClass = 'yes'; }
+    else if (p.outcome === 'no') { outcomeText = 'Mitch was a no-show.'; dotClass = 'no'; }
     else { outcomeText = 'Outcome not yet recorded.'; dotClass = 'tbd'; }
     let crowdText, crowdClass;
     if (total === 0) { crowdText = 'No votes were cast.'; crowdClass = 'tbd'; }
-    else if (display.outcome && display.outcome !== 'tbd') {
-      const correct = display.outcome === crowdSays;
+    else if (p.outcome && p.outcome !== 'tbd') {
+      const correct = p.outcome === crowdSays;
       crowdText = yp + '% voted yes · ' + total + ' votes' + (correct ? ' · Crowd was right.' : ' · Crowd was wrong.');
       crowdClass = correct ? 'correct' : 'wrong';
     } else {
@@ -361,9 +472,10 @@ function renderDeadWindow() {
       crowdClass = 'tbd';
     }
     deadPrev.innerHTML = '<div class="prev-card"><div class="prev-dot ' + dotClass + '"></div><div><p class="prev-text"><strong>' + dateStr + '</strong> — ' + outcomeText + '</p><p class="prev-crowd ' + crowdClass + '">' + crowdText + '</p></div></div>';
-  } else {
+  } else if (!c || (+c.yes_votes + +c.no_votes === 0)) {
     deadPrev.innerHTML = '<p style="font-family:\'DM Mono\',monospace;font-size:11px;color:var(--muted);text-align:center;">No previous results yet.</p>';
   }
+
   startCountdown(pollData.nextNoonUTC);
 }
 
@@ -425,19 +537,40 @@ document.addEventListener('touchend', e => {
   if (dy > 80) location.reload();
 });
 
-async function castVote(choice) {
+async function castVote(choice, e) {
+  const btn = document.getElementById('btn-' + choice);
+  const otherBtn = document.getElementById(choice === 'yes' ? 'btn-no' : 'btn-yes');
+  if (e) addRipple(btn, e);
+  btn.classList.add('voting');
+  otherBtn.classList.add('voting');
+  document.getElementById('logging-msg').classList.add('visible');
+  if (navigator.vibrate) navigator.vibrate(40);
   try {
     const r = await fetch('/api/vote', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ choice }) });
     const data = await r.json();
+    document.getElementById('logging-msg').classList.remove('visible');
     if (data.success) {
       setMyVote(pollData.pollDate, choice);
       if (data.current) pollData.current = data.current;
-      transitionTo('screen-vote', 'screen-results');
-      renderResults();
+      btn.classList.remove('voting');
+      btn.classList.add('voted-' + choice);
+      otherBtn.classList.remove('voting');
+      setTimeout(() => {
+        transitionTo('screen-vote', 'screen-results');
+        renderResults();
+        startAutoRefresh();
+      }, 400);
     } else if (data.alreadyVoted) {
+      btn.classList.remove('voting');
+      otherBtn.classList.remove('voting');
       showAlreadyVoted(choice);
     }
-  } catch(e) { console.error(e); }
+  } catch(err) {
+    document.getElementById('logging-msg').classList.remove('visible');
+    btn.classList.remove('voting');
+    otherBtn.classList.remove('voting');
+    console.error(err);
+  }
 }
 
 function showAlreadyVoted(choice) {
@@ -448,8 +581,18 @@ function showAlreadyVoted(choice) {
   badge.className = 'voted-badge ' + choice;
 }
 
-function showResults() { transitionTo('screen-vote', 'screen-results'); renderResults(); }
-function goBack() { if (pollData && pollData.votingOpen) transitionTo('screen-results', 'screen-vote'); }
+function showResults() {
+  transitionTo('screen-vote', 'screen-results');
+  renderResults();
+  startAutoRefresh();
+}
+
+function goBack() {
+  if (pollData && pollData.votingOpen) {
+    if (autoRefreshInterval) clearInterval(autoRefreshInterval);
+    transitionTo('screen-results', 'screen-vote');
+  }
+}
 
 function transitionTo(fromId, toId) {
   const from = document.getElementById(fromId);
@@ -471,7 +614,11 @@ async function init() {
   document.getElementById('vote-question').textContent = 'Will Mitch work on ' + fmtDate(pollDate) + '?';
   if (myVote) {
     showAlreadyVoted(myVote);
-    setTimeout(() => { transitionTo('screen-vote', 'screen-results'); renderResults(); }, 400);
+    setTimeout(() => {
+      transitionTo('screen-vote', 'screen-results');
+      renderResults();
+      startAutoRefresh();
+    }, 400);
   }
 }
 
