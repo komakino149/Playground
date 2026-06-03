@@ -67,17 +67,24 @@ function getPollInfo() {
   tomorrowDate.setDate(tomorrowDate.getDate() + 1);
   const tomorrowET = `${tomorrowDate.getFullYear()}-${String(tomorrowDate.getMonth()+1).padStart(2,'0')}-${String(tomorrowDate.getDate()).padStart(2,'0')}`;
 
+  const yesterdayDate = new Date(etDate);
+  yesterdayDate.setDate(yesterdayDate.getDate() - 1);
+  const yesterdayET = `${yesterdayDate.getFullYear()}-${String(yesterdayDate.getMonth()+1).padStart(2,'0')}-${String(yesterdayDate.getDate()).padStart(2,'0')}`;
+
   let votingOpen = false;
   let pollDate = null;
   let deadWindow = false;
 
   if (etTotalMinutes >= 720) {
+    // 12pm to midnight: voting open, predicting tomorrow
     votingOpen = true;
     pollDate = tomorrowET;
   } else if (etTotalMinutes < 180) {
+    // midnight to 3am: voting open, predicting today
     votingOpen = true;
     pollDate = todayET;
   } else {
+    // 3am to noon: dead window
     votingOpen = false;
     deadWindow = true;
     pollDate = null;
@@ -91,7 +98,7 @@ function getPollInfo() {
   nextNoon.setHours(12, 0, 0, 0);
   const nextNoonUTC = new Date(nextNoon.toLocaleString('en-US', { timeZone: 'UTC' })).toISOString();
 
-  return { votingOpen, deadWindow, pollDate, todayET, tomorrowET, etTotalMinutes, nextNoonUTC };
+  return { votingOpen, deadWindow, pollDate, todayET, tomorrowET, yesterdayET, etTotalMinutes, nextNoonUTC };
 }
 
 function ensurePoll(pollDate) {
@@ -129,9 +136,19 @@ function getHistory() {
 app.get('/api/poll', (req, res) => {
   const info = getPollInfo();
   if (info.votingOpen) ensurePoll(info.pollDate);
-  const current = info.pollDate ? getPoll(info.pollDate) : null;
+  // During dead window, fetch today's poll to show closing results
+  const fetchDate = info.pollDate || info.todayET;
+  const current = getPoll(fetchDate);
   const lastArchived = getLastArchivedPoll();
-  res.json({ votingOpen: info.votingOpen, deadWindow: info.deadWindow, pollDate: info.pollDate, nextNoonUTC: info.nextNoonUTC, current, lastArchived });
+  res.json({
+    votingOpen: info.votingOpen,
+    deadWindow: info.deadWindow,
+    pollDate: info.pollDate,
+    todayET: info.todayET,
+    nextNoonUTC: info.nextNoonUTC,
+    current,
+    lastArchived
+  });
 });
 
 app.post('/api/vote', (req, res) => {
@@ -168,7 +185,8 @@ function requireAdmin(req, res, next) {
 app.get('/api/admin/data', requireAdmin, (req, res) => {
   const info = getPollInfo();
   const history = getHistory();
-  const current = info.pollDate ? getPoll(info.pollDate) : null;
+  const fetchDate = info.pollDate || info.todayET;
+  const current = getPoll(fetchDate);
   res.json({ current, history, pollInfo: info });
 });
 
@@ -184,7 +202,8 @@ app.get('/api/admin/votes/:pollDate', requireAdmin, (req, res) => {
 app.post('/api/admin/archive', requireAdmin, (req, res) => {
   const { outcome, pollDate } = req.body;
   if (outcome !== 'yes' && outcome !== 'no') return res.status(400).json({ error: 'Invalid outcome' });
-  const date = pollDate || getPollInfo().pollDate;
+  const info = getPollInfo();
+  const date = pollDate || info.pollDate || info.todayET;
   if (!date) return res.status(400).json({ error: 'No active poll' });
   ensurePoll(date);
   db.run(`UPDATE polls SET outcome = ?, archived = 1 WHERE poll_date = ?`, [outcome, date]);
@@ -211,9 +230,10 @@ app.delete('/api/admin/history/:pollDate', requireAdmin, (req, res) => {
 
 app.post('/api/admin/reset', requireAdmin, (req, res) => {
   const info = getPollInfo();
-  if (!info.pollDate) return res.status(400).json({ error: 'No active poll' });
-  db.run(`UPDATE polls SET yes_votes = 0, no_votes = 0 WHERE poll_date = ?`, [info.pollDate]);
-  db.run(`DELETE FROM vote_log WHERE poll_date = ?`, [info.pollDate]);
+  const date = info.pollDate || info.todayET;
+  if (!date) return res.status(400).json({ error: 'No active poll' });
+  db.run(`UPDATE polls SET yes_votes = 0, no_votes = 0 WHERE poll_date = ?`, [date]);
+  db.run(`DELETE FROM vote_log WHERE poll_date = ?`, [date]);
   saveDb();
   res.json({ success: true });
 });
