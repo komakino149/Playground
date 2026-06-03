@@ -51,7 +51,6 @@ function saveDb() {
   fs.writeFileSync(DB_PATH, Buffer.from(data));
 }
 
-// Get ET offset in ms at a given UTC time (handles DST correctly)
 function getETOffsetMs(utcDate) {
   const utcStr = utcDate.toLocaleString('en-US', { timeZone: 'UTC', hour12: false,
     year: 'numeric', month: '2-digit', day: '2-digit',
@@ -65,7 +64,6 @@ function getETOffsetMs(utcDate) {
 function getPollInfo() {
   const now = new Date();
 
-  // Get current ET date/time components
   const etStr = now.toLocaleString('en-US', { timeZone: TZ, hour12: false,
     year: 'numeric', month: '2-digit', day: '2-digit',
     hour: '2-digit', minute: '2-digit', second: '2-digit' });
@@ -74,23 +72,21 @@ function getPollInfo() {
   const etMinute = etDate.getMinutes();
   const etTotalMinutes = etHour * 60 + etMinute;
 
-  // ET date strings
   const pad = n => String(n).padStart(2, '0');
   const todayET = `${etDate.getFullYear()}-${pad(etDate.getMonth()+1)}-${pad(etDate.getDate())}`;
 
   const tom = new Date(etDate); tom.setDate(tom.getDate() + 1);
   const tomorrowET = `${tom.getFullYear()}-${pad(tom.getMonth()+1)}-${pad(tom.getDate())}`;
 
-  const yes = new Date(etDate); yes.setDate(yes.getDate() - 1);
-  const yesterdayET = `${yes.getFullYear()}-${pad(yes.getMonth()+1)}-${pad(yes.getDate())}`;
+  const yest = new Date(etDate); yest.setDate(yest.getDate() - 1);
+  const yesterdayET = `${yest.getFullYear()}-${pad(yest.getMonth()+1)}-${pad(yest.getDate())}`;
 
-  // Determine window
   let votingOpen = false;
   let pollDate = null;
   let deadWindow = false;
 
-  if (etTotalMinutes >= 720) {
-    // 12pm–midnight: open, predicting tomorrow
+  if (etTotalMinutes >= 1020) {
+    // 5pm–midnight: open, predicting tomorrow
     votingOpen = true;
     pollDate = tomorrowET;
   } else if (etTotalMinutes < 180) {
@@ -98,28 +94,23 @@ function getPollInfo() {
     votingOpen = true;
     pollDate = todayET;
   } else {
-    // 3am–noon: dead window
+    // 3am–5pm: dead window
     deadWindow = true;
   }
 
-  // Calculate next noon ET in UTC
-  // Figure out which calendar day noon ET falls on next
-  let noonDateET;
-  if (etTotalMinutes >= 720) {
-    // Past noon today, next noon is tomorrow
-    noonDateET = tomorrowET;
+  // Next 5pm ET
+  let nextOpenDateET;
+  if (etTotalMinutes >= 1020) {
+    nextOpenDateET = tomorrowET;
   } else {
-    // Before noon today, next noon is today
-    noonDateET = todayET;
+    nextOpenDateET = todayET;
   }
 
-  // Build noon UTC by taking ET offset into account
-  // Parse "YYYY-MM-DD 12:00:00" as if it were UTC, then shift by ET offset
-  const noonAsIfUTC = new Date(`${noonDateET}T12:00:00.000Z`);
-  const etOffset = getETOffsetMs(now); // ET is behind UTC, so this is positive (e.g. 4*3600000 for EDT)
-  const nextNoonUTC = new Date(noonAsIfUTC.getTime() + etOffset).toISOString();
+  const openAsIfUTC = new Date(`${nextOpenDateET}T17:00:00.000Z`);
+  const etOffset = getETOffsetMs(now);
+  const nextOpenUTC = new Date(openAsIfUTC.getTime() + etOffset).toISOString();
 
-  return { votingOpen, deadWindow, pollDate, todayET, tomorrowET, yesterdayET, etTotalMinutes, nextNoonUTC };
+  return { votingOpen, deadWindow, pollDate, todayET, tomorrowET, yesterdayET, etTotalMinutes, nextNoonUTC: nextOpenUTC };
 }
 
 function ensurePoll(pollDate) {
