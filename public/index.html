@@ -28,126 +28,73 @@
   .gate-title { font-family: 'Bebas Neue', sans-serif; font-size: 56px; letter-spacing: 0.04em; line-height: 0.9; margin-bottom: 6px; }
   .gate-title span { color: var(--accent); }
   .gate-sub { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); margin-bottom: 2rem; }
-  .gate-input {
-    width: 100%; padding: 12px 16px; font-size: 16px;
-    font-family: 'DM Sans', sans-serif; letter-spacing: 0.1em;
-    background: var(--card); border: 1.5px solid var(--border);
-    border-radius: 4px; color: var(--ink); outline: none;
-    text-align: center; margin-bottom: 10px;
-    transition: border-color 0.15s;
-  }
+  .gate-input { width: 100%; padding: 12px 16px; font-size: 16px; font-family: 'DM Sans', sans-serif; letter-spacing: 0.1em; background: var(--card); border: 1.5px solid var(--border); border-radius: 4px; color: var(--ink); outline: none; text-align: center; margin-bottom: 10px; transition: border-color 0.15s; }
   .gate-input:focus { border-color: var(--ink); }
   .gate-input.error { border-color: var(--no); }
-  .gate-btn {
-    width: 100%; padding: 11px;
-    font-family: 'DM Mono', monospace; font-size: 11px;
-    letter-spacing: 0.14em; text-transform: uppercase;
-    background: var(--ink); color: var(--paper);
-    border: none; border-radius: 4px; cursor: pointer;
-    transition: opacity 0.15s;
-  }
+  .gate-btn { width: 100%; padding: 11px; font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; background: var(--ink); color: var(--paper); border: none; border-radius: 4px; cursor: pointer; transition: opacity 0.15s; }
   .gate-btn:hover { opacity: 0.85; }
   .gate-error { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--no); margin-top: 8px; height: 16px; }
 
   .screen {
     position: fixed; inset: 0; display: flex; flex-direction: column;
-    align-items: center; justify-content: center; padding: 0;
+    align-items: center; justify-content: center; padding: 2rem;
     opacity: 0; pointer-events: none;
     transition: opacity 0.5s ease, transform 0.5s ease; transform: translateY(24px);
-    overflow-y: auto;
   }
   .screen.active { opacity: 1; pointer-events: all; transform: translateY(0); }
   .screen.exit { opacity: 0; transform: translateY(-24px); }
 
-  .card-wrap {
-    width: 100%; max-width: 480px;
-    margin: 0 auto;
-    border-left: 0.5px solid var(--border);
-    border-right: 0.5px solid var(--border);
-    min-height: 100vh;
-    display: flex; flex-direction: column;
-    position: relative;
-  }
+  .masthead { text-align: center; margin-bottom: 2rem; }
+  .masthead-eyebrow { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
+  .masthead h1 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(48px, 10vw, 88px); letter-spacing: 0.04em; line-height: 0.9; color: var(--ink); }
+  .masthead h1 span { color: var(--accent); }
+  .masthead-sub { font-size: 14px; color: var(--muted); margin-top: 8px; font-weight: 300; }
 
-  .classification {
-    position: absolute; top: 12px; right: 14px;
-    font-family: 'DM Mono', monospace; font-size: 8px;
-    letter-spacing: 0.14em; text-transform: uppercase;
-    color: var(--border); border: 0.5px solid var(--border);
-    padding: 2px 6px; border-radius: 2px;
-  }
-
-  .mw-header {
-    text-align: center;
-    padding: 2.5rem 2rem 1.25rem;
-    border-bottom: 0.5px solid var(--border);
-  }
-  .mw-eyebrow { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
-  .mw-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(56px, 14vw, 80px); letter-spacing: 0.04em; line-height: 0.9; color: var(--ink); }
-  .mw-title span { color: var(--accent); }
-  .mw-subtitle { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); margin-top: 8px; }
-
-  .mw-status-bar {
-    display: flex; justify-content: space-between; align-items: center;
-    padding: 5px 16px; background: var(--ink);
-    font-family: 'DM Mono', monospace; font-size: 9px;
-    letter-spacing: 0.12em; text-transform: uppercase; color: #aaa;
-  }
-  .mw-status-bar .live { color: var(--yes); display: flex; align-items: center; gap: 5px; }
-  .mw-status-bar .closed { color: var(--no); }
-  .mw-live-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--yes); }
-
-  .mw-body { padding: 1.25rem 1.5rem 1rem; flex: 1; }
-
-  .mw-question { font-size: 14px; color: var(--muted); font-weight: 300; text-align: center; margin-bottom: 1.25rem; line-height: 1.5; }
-  .mw-question strong { color: var(--ink); font-weight: 500; }
-
-  .vote-pair { display: flex; gap: 12px; margin-bottom: 8px; }
-  .vote-btn { flex: 1; border: 1.5px solid var(--border); border-radius: 4px; padding: 22px 14px 18px; display: flex; flex-direction: column; align-items: center; gap: 5px; background: var(--card); cursor: pointer; transition: border-color 0.15s, transform 0.12s; }
+  .vote-pair { display: flex; gap: 14px; width: 100%; max-width: 420px; }
+  .vote-btn { flex: 1; padding: 0; background: none; cursor: pointer; border: 1.5px solid var(--border); border-radius: 4px; overflow: hidden; transition: border-color 0.2s, transform 0.15s; }
   .vote-btn:hover { transform: translateY(-2px); }
-  .vote-btn:active { transform: scale(0.98); }
+  .vote-btn:active { transform: translateY(0) scale(0.98); }
+  .vote-btn-inner { padding: 24px 16px 20px; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+  .vote-btn .label { font-family: 'Bebas Neue', sans-serif; font-size: 38px; letter-spacing: 0.06em; line-height: 1; transition: color 0.2s; }
+  .vote-btn .sublabel { font-size: 10px; font-family: 'DM Mono', monospace; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
   .vote-btn.yes:hover { border-color: var(--yes); }
-  .vote-btn.yes:hover .btn-label { color: var(--yes); }
+  .vote-btn.yes:hover .label { color: var(--yes); }
   .vote-btn.no:hover { border-color: var(--no); }
-  .vote-btn.no:hover .btn-label { color: var(--no); }
-  .btn-label { font-family: 'Bebas Neue', sans-serif; font-size: 36px; letter-spacing: 0.06em; line-height: 1; color: var(--ink); transition: color 0.15s; }
-  .btn-sub { font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+  .vote-btn.no:hover .label { color: var(--no); }
+  .vote-note { margin-top: 1rem; font-size: 11px; font-family: 'DM Mono', monospace; color: var(--muted); letter-spacing: 0.06em; text-align: center; }
 
-  .vote-note { font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--dim); text-align: center; margin-top: 6px; margin-bottom: 1.25rem; }
-
-  .voted-badge { display: inline-block; padding: 5px 14px; border-radius: 999px; font-size: 10px; font-family: 'DM Mono', monospace; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 1.25rem; }
+  .voted-badge { display: inline-block; padding: 5px 14px; border-radius: 999px; font-size: 11px; font-family: 'DM Mono', monospace; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 1.5rem; }
   .voted-badge.yes { background: #e6f4ed; color: var(--yes); }
   .voted-badge.no { background: #faeaea; color: var(--no); }
 
-  .divider { border: none; border-top: 0.5px solid var(--border); margin: 0 0 1.25rem; }
+  .results-wrap { width: 100%; max-width: 480px; display: flex; flex-direction: column; }
 
-  .section-label { font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: 0.06em; margin-bottom: 10px; }
-
-  .prev-card { background: var(--card); border: 0.5px solid var(--border); border-radius: 6px; padding: 12px 14px; margin-bottom: 14px; display: flex; align-items: flex-start; gap: 10px; }
-  .prev-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; margin-top: 4px; }
+  .prev-card { background: var(--card); border: 0.5px solid var(--border); border-radius: 6px; padding: 14px 18px; margin-bottom: 18px; display: flex; align-items: flex-start; gap: 12px; }
+  .prev-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; margin-top: 4px; }
   .prev-dot.yes { background: var(--yes); }
   .prev-dot.no { background: var(--no); }
   .prev-dot.tbd { background: var(--muted); }
   .prev-text { font-size: 12px; color: var(--muted); line-height: 1.55; }
   .prev-text strong { color: var(--ink); font-weight: 500; }
-  .prev-crowd { font-family: 'DM Mono', monospace; font-size: 10px; margin-top: 2px; letter-spacing: 0.04em; }
+  .prev-crowd { font-family: 'DM Mono', monospace; font-size: 10px; margin-top: 3px; letter-spacing: 0.04em; }
   .prev-crowd.correct { color: var(--yes); }
   .prev-crowd.wrong { color: var(--no); }
   .prev-crowd.tbd { color: var(--muted); }
 
-  .bar-block { margin-bottom: 12px; }
-  .bar-row { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 4px; }
+  .section-label { font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 0.06em; margin-bottom: 12px; color: var(--ink); }
+  .bar-block { margin-bottom: 14px; }
+  .bar-row { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 5px; }
   .bar-label { font-size: 12px; font-weight: 500; }
   .bar-label.yes { color: var(--yes); }
   .bar-label.no { color: var(--no); }
-  .bar-stat { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--muted); }
+  .bar-stat { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--muted); }
   .bar-track { height: 7px; background: var(--border); border-radius: 999px; overflow: hidden; }
   .bar-fill { height: 100%; border-radius: 999px; transition: width 0.8s cubic-bezier(0.25, 1, 0.5, 1); width: 0%; }
   .bar-fill.yes { background: var(--yes); }
   .bar-fill.no { background: var(--no); }
 
-  .verdict { margin-top: 12px; padding: 11px 14px; border-radius: 4px; border: 0.5px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
-  .verdict-label { font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 2px; }
+  .verdict { margin-top: 14px; padding: 12px 16px; border-radius: 4px; display: flex; align-items: center; justify-content: space-between; border: 0.5px solid var(--border); }
+  .verdict-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 2px; }
   .verdict-value { font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: 0.06em; }
   .verdict-value.yes { color: var(--yes); }
   .verdict-value.no { color: var(--no); }
@@ -163,21 +110,21 @@
   .back-btn { margin-top: 1rem; background: none; border: none; font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
   .back-btn:hover { color: var(--ink); }
 
-  .dead-body { padding: 1.5rem 1.5rem 1rem; flex: 1; display: flex; flex-direction: column; align-items: center; }
+  .dead-wrap { width: 100%; max-width: 480px; display: flex; flex-direction: column; align-items: center; }
   .countdown-block { text-align: center; margin-bottom: 2rem; width: 100%; }
   .countdown-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
-  .countdown-time { font-family: 'Bebas Neue', sans-serif; font-size: clamp(56px, 16vw, 88px); letter-spacing: 0.02em; line-height: 1; color: var(--ink); }
+  .countdown-time { font-family: 'Bebas Neue', sans-serif; font-size: clamp(52px, 14vw, 96px); letter-spacing: 0.04em; line-height: 1; color: var(--ink); }
   .countdown-sub { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); margin-top: 6px; }
   .dead-prev { width: 100%; }
 
-  .ptr { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: center; gap: 8px; height: 0; overflow: hidden; background: var(--paper); font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); transition: height 0.2s; }
+  .ptr { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: center; gap: 8px; height: 0; overflow: hidden; background: var(--paper); font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); transition: height 0.2s; }
   .ptr.visible { height: 44px; }
 
-  .mw-ticker { border-top: 0.5px solid var(--border); padding: 5px 0; overflow: hidden; background: var(--paper); margin-top: auto; }
-  .mw-ticker-inner { display: flex; white-space: nowrap; animation: tick 24s linear infinite; font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--dim); }
-  .mw-ticker-inner span { padding: 0 20px; }
-  .dot-sep { color: var(--border); }
+  .ticker { position: fixed; bottom: 0; left: 0; right: 0; height: 30px; overflow: hidden; border-top: 0.5px solid var(--border); background: var(--paper); display: flex; align-items: center; }
+  .ticker-inner { display: flex; white-space: nowrap; animation: tick 22s linear infinite; font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+  .ticker-inner span { padding: 0 22px; }
   @keyframes tick { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+  .dot-sep { color: var(--border); }
 </style>
 </head>
 <body>
@@ -202,136 +149,94 @@
 
 <!-- VOTE SCREEN -->
 <div class="screen active" id="screen-vote">
-  <div class="card-wrap">
-    <div class="classification">Classified</div>
-    <div class="mw-header">
-      <p class="mw-eyebrow">Daily attendance intelligence · Est. 2026</p>
-      <div class="mw-title">Mitch<span>Watch</span></div>
-      <p class="mw-subtitle">Monitoring Mitchell since the beginning of time</p>
-    </div>
-    <div class="mw-status-bar">
-      <span id="vote-date-label">—</span>
-      <span class="live"><span class="mw-live-dot"></span>Polls open</span>
-      <span>Closes 3am ET</span>
-    </div>
-    <div class="mw-body">
-      <p class="mw-question" id="vote-question">Will Mitch grace us with his presence?</p>
-      <div id="pre-vote">
-        <div class="vote-pair">
-          <button class="vote-btn yes" onclick="castVote('yes')">
-            <span class="btn-label">Yes</span>
-            <span class="btn-sub">He'll be here</span>
-          </button>
-          <button class="vote-btn no" onclick="castVote('no')">
-            <span class="btn-label">No</span>
-            <span class="btn-sub">Ghost mode</span>
-          </button>
+  <div class="masthead">
+    <p class="masthead-eyebrow">Daily office forecast</p>
+    <h1>Mitch<span>Watch</span></h1>
+    <p class="masthead-sub" id="vote-question"></p>
+  </div>
+  <div id="pre-vote">
+    <div class="vote-pair">
+      <button class="vote-btn yes" onclick="castVote('yes')">
+        <div class="vote-btn-inner">
+          <span class="label">Yes</span>
+          <span class="sublabel">He'll be here</span>
         </div>
-        <p class="vote-note">One vote per device · your prediction is logged</p>
-      </div>
-      <div id="already-voted" style="display:none; text-align:center;">
-        <span class="voted-badge" id="voted-badge-label"></span>
-        <p style="font-size:13px; color:var(--muted); font-weight:300; margin-bottom:1.25rem;">Your vote is on record.</p>
-        <button class="back-btn" onclick="showResults()">→ see current odds</button>
-      </div>
+      </button>
+      <button class="vote-btn no" onclick="castVote('no')">
+        <div class="vote-btn-inner">
+          <span class="label">No</span>
+          <span class="sublabel">Ghost mode</span>
+        </div>
+      </button>
     </div>
-    <div class="mw-ticker">
-      <div class="mw-ticker-inner" id="ticker-vote"></div>
-    </div>
+    <p class="vote-note">one vote per device · voting closes 3am ET · opens 5pm ET</p>
+  </div>
+  <div id="already-voted" style="display:none; text-align:center;">
+    <span class="voted-badge" id="voted-badge-label"></span>
+    <p style="font-size:14px; color:var(--muted); font-weight:300; margin-bottom:1.25rem;">Your vote is in.</p>
+    <button class="back-btn" onclick="showResults()">→ see current odds</button>
   </div>
 </div>
 
 <!-- RESULTS SCREEN -->
 <div class="screen" id="screen-results">
-  <div class="card-wrap">
-    <div class="classification">Classified</div>
-    <div class="mw-header">
-      <p class="mw-eyebrow">Daily attendance intelligence · Est. 2026</p>
-      <div class="mw-title">Mitch<span>Watch</span></div>
-      <p class="mw-subtitle">Monitoring Mitchell since the beginning of time</p>
+  <div class="results-wrap">
+    <div class="prev-card" id="prev-card" style="display:none;">
+      <div class="prev-dot tbd" id="prev-dot"></div>
+      <div>
+        <p class="prev-text" id="prev-text"></p>
+        <p class="prev-crowd tbd" id="prev-crowd"></p>
+      </div>
     </div>
-    <div class="mw-status-bar">
-      <span id="results-date-label">—</span>
-      <span class="live"><span class="mw-live-dot"></span>Polls open</span>
-      <span>Closes 3am ET</span>
+    <p class="section-label" id="results-heading">Current odds</p>
+    <div class="bar-block">
+      <div class="bar-row">
+        <span class="bar-label yes">Yes — he'll show</span>
+        <span class="bar-stat" id="yes-stat">—</span>
+      </div>
+      <div class="bar-track"><div class="bar-fill yes" id="bar-yes"></div></div>
     </div>
-    <div class="mw-body">
-      <div class="prev-card" id="prev-card" style="display:none;">
-        <div class="prev-dot tbd" id="prev-dot"></div>
-        <div>
-          <p class="prev-text" id="prev-text"></p>
-          <p class="prev-crowd tbd" id="prev-crowd"></p>
-        </div>
+    <div class="bar-block">
+      <div class="bar-row">
+        <span class="bar-label no">No — ghost mode</span>
+        <span class="bar-stat" id="no-stat">—</span>
       </div>
-      <p class="section-label" id="results-heading">Current odds</p>
-      <div class="bar-block">
-        <div class="bar-row">
-          <span class="bar-label yes">Yes — he'll show</span>
-          <span class="bar-stat" id="yes-stat">—</span>
-        </div>
-        <div class="bar-track"><div class="bar-fill yes" id="bar-yes"></div></div>
-      </div>
-      <div class="bar-block">
-        <div class="bar-row">
-          <span class="bar-label no">No — ghost mode</span>
-          <span class="bar-stat" id="no-stat">—</span>
-        </div>
-        <div class="bar-track"><div class="bar-fill no" id="bar-no"></div></div>
-      </div>
-      <div class="verdict">
-        <div>
-          <p class="verdict-label">Crowd verdict</p>
-          <p class="verdict-value tie" id="verdict-value">—</p>
-        </div>
-        <div style="text-align:right;">
-          <p class="verdict-label">Confidence</p>
-          <p style="font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);" id="confidence">—</p>
-        </div>
-      </div>
-      <div class="results-footer">
-        <p class="total-note" id="total-note">Surveillance ongoing</p>
-        <button class="refresh-btn" id="refresh-btn" onclick="refreshResults()">
-          <svg width="12" height="12" viewBox="0 0 13 13" fill="none">
-            <path d="M11.5 6.5a5 5 0 11-5-5c1.5 0 2.8.6 3.8 1.6L12 1" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M9 3h3V0" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-          Refresh
-        </button>
-      </div>
-      <button class="back-btn" onclick="goBack()">← back</button>
+      <div class="bar-track"><div class="bar-fill no" id="bar-no"></div></div>
     </div>
-    <div class="mw-ticker">
-      <div class="mw-ticker-inner" id="ticker-results"></div>
+    <div class="verdict">
+      <div>
+        <p class="verdict-label">Crowd verdict</p>
+        <p class="verdict-value tie" id="verdict-value">—</p>
+      </div>
     </div>
+    <div class="results-footer">
+      <p class="total-note" id="total-note">—</p>
+      <button class="refresh-btn" id="refresh-btn" onclick="refreshResults()">
+        <svg width="12" height="12" viewBox="0 0 13 13" fill="none">
+          <path d="M11.5 6.5a5 5 0 11-5-5c1.5 0 2.8.6 3.8 1.6L12 1" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M9 3h3V0" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Refresh
+      </button>
+    </div>
+    <button class="back-btn" onclick="goBack()">← back</button>
   </div>
 </div>
 
 <!-- DEAD WINDOW SCREEN -->
 <div class="screen" id="screen-dead">
-  <div class="card-wrap">
-    <div class="classification">Classified</div>
-    <div class="mw-header">
-      <p class="mw-eyebrow">Daily attendance intelligence · Est. 2026</p>
-      <div class="mw-title">Mitch<span>Watch</span></div>
-      <p class="mw-subtitle">Monitoring Mitchell since the beginning of time</p>
+  <div class="dead-wrap">
+    <div class="countdown-block">
+      <p class="countdown-label">Voting reopens in</p>
+      <p class="countdown-time" id="countdown">00:00:00</p>
+      <p class="countdown-sub">Polls open at 5pm ET daily</p>
     </div>
-    <div class="mw-status-bar">
-      <span id="dead-date-label">—</span>
-      <span class="closed">Polls closed</span>
-      <span>Opens 5pm ET</span>
-    </div>
-    <div class="dead-body">
-      <div class="countdown-block">
-        <p class="countdown-label">Voting reopens in</p>
-        <p class="countdown-time" id="countdown">00:00:00</p>
-        <p class="countdown-sub">Polls open at 5pm ET daily</p>
-      </div>
-      <div class="dead-prev" id="dead-prev"></div>
-    </div>
-    <div class="mw-ticker">
-      <div class="mw-ticker-inner" id="ticker-dead"></div>
-    </div>
+    <div class="dead-prev" id="dead-prev"></div>
   </div>
+</div>
+
+<div class="ticker">
+  <div class="ticker-inner" id="ticker-inner"></div>
 </div>
 
 <script>
@@ -352,7 +257,6 @@ function checkGate() {
   }
 }
 
-// Check auth on load
 if (localStorage.getItem(GATE_KEY) === '1') {
   document.getElementById('gate').style.display = 'none';
 }
@@ -378,21 +282,6 @@ function fmtDate(str) {
   return d.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
 }
 
-function fmtDateShort(str) {
-  if (!str) return '';
-  const d = new Date(str + 'T12:00:00');
-  return d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
-}
-
-function getConfidence(yp, total) {
-  if (total === 0) return '—';
-  const margin = Math.abs(yp - 50);
-  if (margin < 10) return 'Very low';
-  if (margin < 20) return 'Low';
-  if (margin < 35) return 'Moderate';
-  return 'High';
-}
-
 function renderPrevCard(poll) {
   const card = document.getElementById('prev-card');
   if (!poll) { card.style.display = 'none'; return; }
@@ -409,7 +298,7 @@ function renderPrevCard(poll) {
   else { dot.className = 'prev-dot tbd'; txt.innerHTML = '<strong>' + dateStr + '</strong> — outcome pending.'; }
   if (poll.outcome && poll.outcome !== 'tbd') {
     if (total === 0) { crowd.textContent = 'No votes were cast.'; crowd.className = 'prev-crowd tbd'; }
-    else if (crowdSays === 'tie') { crowd.textContent = yp + '% yes · ' + total + ' votes — it was a tie.'; crowd.className = 'prev-crowd tbd'; }
+    else if (crowdSays === 'tie') { crowd.textContent = yp + '% yes · ' + total + ' votes — tied.'; crowd.className = 'prev-crowd tbd'; }
     else {
       const correct = poll.outcome === crowdSays;
       crowd.textContent = yp + '% voted yes · ' + total + ' votes' + (correct ? ' · Crowd was right.' : ' · Crowd was wrong.');
@@ -430,18 +319,16 @@ function renderResults() {
   const yp = pct(yes, no);
   const np = pct(no, yes);
   const pollDate = pollData.pollDate;
-  document.getElementById('results-heading').textContent = 'Current odds — ' + fmtDateShort(pollDate);
-  document.getElementById('results-date-label').textContent = fmtDateShort(pollDate) || '—';
+  document.getElementById('results-heading').textContent = 'Odds for ' + fmtDate(pollDate);
   document.getElementById('yes-stat').textContent = yes + ' vote' + (yes !== 1 ? 's' : '') + ' · ' + yp + '%';
   document.getElementById('no-stat').textContent = no + ' vote' + (no !== 1 ? 's' : '') + ' · ' + np + '%';
-  document.getElementById('total-note').textContent = total + ' vote' + (total !== 1 ? 's' : '') + ' · surveillance ongoing';
-  document.getElementById('confidence').textContent = getConfidence(yp, total);
+  document.getElementById('total-note').textContent = total + ' vote' + (total !== 1 ? 's' : '') + ' cast';
   setTimeout(() => {
     document.getElementById('bar-yes').style.width = yp + '%';
     document.getElementById('bar-no').style.width = np + '%';
   }, 80);
   const vv = document.getElementById('verdict-value');
-  if (total === 0) { vv.textContent = 'No data yet'; vv.className = 'verdict-value tie'; }
+  if (total === 0) { vv.textContent = '—'; vv.className = 'verdict-value tie'; }
   else if (yes > no) { vv.textContent = 'Probably yes'; vv.className = 'verdict-value yes'; }
   else if (no > yes) { vv.textContent = 'Probably not'; vv.className = 'verdict-value no'; }
   else { vv.textContent = 'Dead tie'; vv.className = 'verdict-value tie'; }
@@ -454,7 +341,6 @@ function renderDeadWindow() {
   const c = pollData.current;
   const p = pollData.lastArchived;
   const display = c && (+c.yes_votes + +c.no_votes > 0) ? c : p;
-  document.getElementById('dead-date-label').textContent = fmtDateShort(pollData.todayET) || '—';
   if (display) {
     const yes = +display.yes_votes, no = +display.no_votes, total = yes + no;
     const yp = total === 0 ? 0 : Math.round(yes/total*100);
@@ -476,7 +362,7 @@ function renderDeadWindow() {
     }
     deadPrev.innerHTML = '<div class="prev-card"><div class="prev-dot ' + dotClass + '"></div><div><p class="prev-text"><strong>' + dateStr + '</strong> — ' + outcomeText + '</p><p class="prev-crowd ' + crowdClass + '">' + crowdText + '</p></div></div>';
   } else {
-    deadPrev.innerHTML = '<p style="font-family:\'DM Mono\',monospace;font-size:10px;color:var(--muted);text-align:center;letter-spacing:0.1em;text-transform:uppercase;">No previous results yet.</p>';
+    deadPrev.innerHTML = '<p style="font-family:\'DM Mono\',monospace;font-size:11px;color:var(--muted);text-align:center;">No previous results yet.</p>';
   }
   startCountdown(pollData.nextNoonUTC);
 }
@@ -497,29 +383,22 @@ function startCountdown(nextOpenUTC) {
   countdownInterval = setInterval(tick, 1000);
 }
 
-function buildTicker() {
-  const c = pollData && pollData.current;
+function updateTicker() {
   const base = ['MitchWatch', "Will he or won't he", 'Vote by 3am ET', 'Opens 5pm ET daily', 'Surveillance ongoing', 'Mitchell has not consented to this website'];
+  const c = pollData && pollData.current;
   if (c) {
     const yes = +c.yes_votes, no = +c.no_votes, total = yes + no;
     if (total > 0) { base.push(total + ' humans have weighed in'); base.push('Yes ' + pct(yes,no) + '% · No ' + pct(no,yes) + '%'); }
   }
-  return [...base,...base].map(s => '<span>' + s + ' <span class="dot-sep">·</span></span>').join('');
-}
-
-function updateTickers() {
-  const html = buildTicker();
-  ['ticker-vote','ticker-results','ticker-dead'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.innerHTML = html;
-  });
+  const items = [...base,...base].map(s => '<span>' + s + ' <span class="dot-sep">·</span></span>').join('');
+  document.getElementById('ticker-inner').innerHTML = items;
 }
 
 async function refreshResults() {
   if (isRefreshing) return;
   isRefreshing = true;
   document.getElementById('refresh-btn').classList.add('spinning');
-  try { await loadPoll(); renderResults(); updateTickers(); } catch(e) {}
+  try { await loadPoll(); renderResults(); updateTicker(); } catch(e) {}
   document.getElementById('refresh-btn').classList.remove('spinning');
   isRefreshing = false;
 }
@@ -565,7 +444,7 @@ function showAlreadyVoted(choice) {
   document.getElementById('pre-vote').style.display = 'none';
   document.getElementById('already-voted').style.display = 'block';
   const badge = document.getElementById('voted-badge-label');
-  badge.textContent = 'Logged: ' + (choice === 'yes' ? 'Yes' : 'No');
+  badge.textContent = 'You voted: ' + (choice === 'yes' ? 'Yes' : 'No');
   badge.className = 'voted-badge ' + choice;
 }
 
@@ -581,7 +460,7 @@ function transitionTo(fromId, toId) {
 
 async function init() {
   await loadPoll();
-  updateTickers();
+  updateTicker();
   if (pollData.deadWindow) {
     transitionTo('screen-vote', 'screen-dead');
     renderDeadWindow();
@@ -589,9 +468,7 @@ async function init() {
   }
   const pollDate = pollData.pollDate;
   const myVote = getMyVote(pollDate);
-  const dateStr = fmtDate(pollDate);
-  document.getElementById('vote-date-label').textContent = fmtDateShort(pollDate) || '—';
-  document.getElementById('vote-question').innerHTML = 'Will Mitch grace us with his presence on <strong>' + dateStr + '?</strong>';
+  document.getElementById('vote-question').textContent = 'Will Mitch work on ' + fmtDate(pollDate) + '?';
   if (myVote) {
     showAlreadyVoted(myVote);
     setTimeout(() => { transitionTo('screen-vote', 'screen-results'); renderResults(); }, 400);
