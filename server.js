@@ -90,16 +90,24 @@ function getPollInfo() {
     pollDate = null;
   }
 
-  // Next noon ET
-  let nextNoon = new Date(etDate);
+// Next noon ET — construct the target time string and let Date parse it as ET
+  let nextNoonDate = new Date(etDate);
   if (etTotalMinutes >= 720) {
-    nextNoon.setDate(nextNoon.getDate() + 1);
+    nextNoonDate.setDate(nextNoonDate.getDate() + 1);
   }
-  nextNoon.setHours(12, 0, 0, 0);
-  const nextNoonUTC = new Date(nextNoon.toLocaleString('en-US', { timeZone: 'UTC' })).toISOString();
-
-  return { votingOpen, deadWindow, pollDate, todayET, tomorrowET, yesterdayET, etTotalMinutes, nextNoonUTC };
-}
+  const ny = nextNoonDate.getFullYear();
+  const nm = String(nextNoonDate.getMonth() + 1).padStart(2, '0');
+  const nd = String(nextNoonDate.getDate()).padStart(2, '0');
+  // Build an ET noon string and convert to UTC via Intl
+  const noonETStr = `${ny}-${nm}-${nd}T12:00:00`;
+  const noonUTCMs = new Date(new Date(noonETStr).toLocaleString('en-US', { timeZone: 'UTC' })).getTime()
+    + (new Date(noonETStr + ' ET').getTimezoneOffset ? 0 : 0);
+  // Reliable method: use a fixed offset aware approach
+  const formatter = new Intl.DateTimeFormat('en-US', { timeZone: TZ, hour: 'numeric', hour12: false });
+  const nowUTC = now.getTime();
+  const etOffsetMs = new Date(now.toLocaleString('en-US', { timeZone: 'UTC' })).getTime() - new Date(now.toLocaleString('en-US', { timeZone: TZ })).getTime();
+  const nextNoonUTC = new Date(`${ny}-${nm}-${nd}T12:00:00`).getTime() + etOffsetMs;
+  const nextNoonUTCStr = new Date(nextNoonUTC).toISOString();
 
 function ensurePoll(pollDate) {
   if (!pollDate) return;
