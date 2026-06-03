@@ -439,6 +439,7 @@ function renderDeadWindow() {
   const c = pollData.current;
   const p = pollData.lastArchived;
 
+  // Show final odds for current poll if votes exist
   if (c && (+c.yes_votes + +c.no_votes > 0)) {
     const yes = +c.yes_votes, no = +c.no_votes, total = yes + no;
     const yp = pct(yes, no), np = pct(no, yes);
@@ -452,28 +453,24 @@ function renderDeadWindow() {
     document.getElementById('dead-verdict').textContent = 'Crowd says: ' + crowdSays + ' · ' + total + ' votes cast';
   }
 
-  if (p) {
+  // Only show previous result card if it's a different day from current poll AND has an outcome recorded
+  if (p && p.poll_date !== (c && c.poll_date) && p.outcome) {
     const yes = +p.yes_votes, no = +p.no_votes, total = yes + no;
     const yp = total === 0 ? 0 : Math.round(yes/total*100);
     const crowdSays = yes > no ? 'yes' : no > yes ? 'no' : 'tie';
     const dateStr = fmtDate(p.poll_date);
-    let outcomeText, dotClass;
-    if (p.outcome === 'yes') { outcomeText = 'Mitch came in.'; dotClass = 'yes'; }
-    else if (p.outcome === 'no') { outcomeText = 'Mitch was a no-show.'; dotClass = 'no'; }
-    else { outcomeText = 'Outcome not yet recorded.'; dotClass = 'tbd'; }
+    const outcomeText = p.outcome === 'yes' ? 'Mitch came in.' : 'Mitch was a no-show.';
+    const dotClass = p.outcome === 'yes' ? 'yes' : 'no';
     let crowdText, crowdClass;
     if (total === 0) { crowdText = 'No votes were cast.'; crowdClass = 'tbd'; }
-    else if (p.outcome && p.outcome !== 'tbd') {
+    else {
       const correct = p.outcome === crowdSays;
       crowdText = yp + '% voted yes · ' + total + ' votes' + (correct ? ' · Crowd was right.' : ' · Crowd was wrong.');
       crowdClass = correct ? 'correct' : 'wrong';
-    } else {
-      crowdText = yp + '% voted yes · ' + total + ' votes cast';
-      crowdClass = 'tbd';
     }
     deadPrev.innerHTML = '<div class="prev-card"><div class="prev-dot ' + dotClass + '"></div><div><p class="prev-text"><strong>' + dateStr + '</strong> — ' + outcomeText + '</p><p class="prev-crowd ' + crowdClass + '">' + crowdText + '</p></div></div>';
-  } else if (!c || (+c.yes_votes + +c.no_votes === 0)) {
-    deadPrev.innerHTML = '<p style="font-family:\'DM Mono\',monospace;font-size:11px;color:var(--muted);text-align:center;">No previous results yet.</p>';
+  } else {
+    deadPrev.innerHTML = '';
   }
 
   startCountdown(pollData.nextNoonUTC);
